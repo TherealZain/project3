@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Scene?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -15,90 +17,158 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<Scene xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-    <AnchorPane prefHeight="461.0" prefWidth="670.0">
-      <children>
-         <BorderPane layoutY="1.0" prefHeight="455.0" prefWidth="661.0">
-            <center>
-               <TabPane prefHeight="609.0" prefWidth="661.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-                 <tabs>
-                   <Tab text="Deposit/Withdraw">
+<AnchorPane prefHeight="591.0" prefWidth="691.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="banking.project3.TransactionManagerController">
+   <children>
+      <BorderPane layoutY="1.0" prefHeight="591.0" prefWidth="691.0">
+         <center>
+            <TabPane prefHeight="609.0" prefWidth="661.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+               <tabs>
+                  <Tab text="Open/Close">
                      <content>
-                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                              <children>
-                                 <GridPane layoutX="150.0" layoutY="31.0" prefHeight="169.0" prefWidth="292.0">
-                                   <columnConstraints>
-                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="280.4435119628906" minWidth="10.0" prefWidth="259.5" />
-                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.98133850097656" minWidth="10.0" prefWidth="32.5" />
-                                   </columnConstraints>
-                                   <rowConstraints>
-                                     <RowConstraints maxHeight="95.02205657958984" minHeight="10.0" prefHeight="47.22852325439453" vgrow="SOMETIMES" />
-                                     <RowConstraints maxHeight="86.77147674560547" minHeight="10.0" prefHeight="69.43853759765625" vgrow="SOMETIMES" />
-                                     <RowConstraints maxHeight="106.00234985351562" minHeight="10.0" prefHeight="52.06146240234375" vgrow="SOMETIMES" />
-                                   </rowConstraints>
-                                    <children>
-                                       <VBox prefHeight="48.0" prefWidth="223.0">
-                                          <children>
-                                             <Label text="First Name">
-                                                <VBox.margin>
-                                                   <Insets />
-                                                </VBox.margin>
-                                             </Label>
-                                             <TextField>
-                                                <VBox.margin>
-                                                   <Insets bottom="10.0" top="10.0" />
-                                                </VBox.margin>
-                                             </TextField>
-                                          </children>
-                                       </VBox>
-                                       <VBox prefHeight="200.0" prefWidth="142.0" GridPane.rowIndex="1">
-                                          <children>
-                                             <Label text="Last Name">
-                                                <VBox.margin>
-                                                   <Insets bottom="5.0" />
-                                                </VBox.margin>
-                                             </Label>
-                                             <TextField>
-                                                <padding>
-                                                   <Insets top="10.0" />
-                                                </padding>
-                                             </TextField>
-                                          </children>
-                                       </VBox>
-                                       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" />
-                                       <VBox prefHeight="43.0" prefWidth="260.0" GridPane.rowIndex="2">
-                                          <children>
-                                             <Label text="Date of Birth">
-                                                <VBox.margin>
-                                                   <Insets bottom="5.0" />
-                                                </VBox.margin>
-                                             </Label>
-                                             <DatePicker />
-                                          </children>
-                                       </VBox>
-                                    </children>
-                                 </GridPane>
-                                 <TextArea layoutX="82.0" layoutY="214.0" prefHeight="200.0" prefWidth="499.0" />
-                              </children>
-                              <padding>
-                                 <Insets top="10.0" />
-                              </padding>
-                           </AnchorPane>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="504.0" prefWidth="691.0">
+                           <children>
+                              <GridPane layoutX="104.0" layoutY="33.0" prefHeight="279.0" prefWidth="471.0">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="280.4435119628906" minWidth="10.0" prefWidth="259.5" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.98133850097656" minWidth="10.0" prefWidth="32.5" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints />
+                                    <RowConstraints maxHeight="123.5" minHeight="10.0" prefHeight="116.5" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="86.77147674560547" minHeight="10.0" prefHeight="68.5" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="106.00234985351562" minHeight="4.5" prefHeight="51.5" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <VBox prefHeight="48.0" prefWidth="223.0" GridPane.rowIndex="1">
+                                       <children>
+                                          <Label text="First Name">
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                          <TextField id="firstName">
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" top="10.0" />
+                                             </VBox.margin>
+                                          </TextField>
+                                          <VBox prefHeight="200.0" prefWidth="142.0">
+                                             <children>
+                                                <Label text="Last Name">
+                                                   <VBox.margin>
+                                                      <Insets bottom="5.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <TextField id="lastName">
+                                                   <padding>
+                                                      <Insets top="10.0" />
+                                                   </padding>
+                                                </TextField>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="82.0" prefWidth="281.0" GridPane.rowIndex="2">
+                                       <children>
+                                          <Label text="Date of Birth">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <DatePicker id="dob" />
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="90.0" prefWidth="137.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                       <children>
+                                          <RadioButton id="checking" mnemonicParsing="false" text="Checking">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="20.0" />
+                                             </VBox.margin>
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="TypeAccount" />
+                                             </toggleGroup>
+                                          </RadioButton>
+                                          <RadioButton id="collegeChecking" mnemonicParsing="false" prefHeight="18.0" prefWidth="149.0" text="College Checking" toggleGroup="$TypeAccount">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="20.0" />
+                                             </VBox.margin>
+                                          </RadioButton>
+                                          <RadioButton id="savings" mnemonicParsing="false" text="Savings" toggleGroup="$TypeAccount">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="20.0" />
+                                             </VBox.margin>
+                                          </RadioButton>
+                                          <RadioButton id="moneyMarket" mnemonicParsing="false" text="Money Market" toggleGroup="$TypeAccount">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="20.0" />
+                                             </VBox.margin>
+                                          </RadioButton>
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <children>
+                                          <RadioButton id="newBrunswick" mnemonicParsing="false" prefHeight="8.0" prefWidth="110.0" text="New Brunswick">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="20.0" top="10.0" />
+                                             </VBox.margin>
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="campus" />
+                                             </toggleGroup>
+                                          </RadioButton>
+                                          <RadioButton id="newark" mnemonicParsing="false" text="Newark" toggleGroup="$campus">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="20.0" />
+                                             </VBox.margin>
+                                          </RadioButton>
+                                          <RadioButton id="camden" mnemonicParsing="false" text="Camden" toggleGroup="$campus">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="20.0" />
+                                             </VBox.margin>
+                                          </RadioButton>
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                       <children>
+                                          <Button id="openButton" mnemonicParsing="false" onAction="#openAccount" prefHeight="26.0" prefWidth="141.0" text="Open Account">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="20.0" top="10.0" />
+                                             </VBox.margin>
+                                          </Button>
+                                          <Button id="closeButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="142.0" text="Close Account">
+                                             <VBox.margin>
+                                                <Insets left="20.0" top="5.0" />
+                                             </VBox.margin>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
+                                       <children>
+                                          <Label text="Open Deposit" />
+                                          <TextField id="openDeposit" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </GridPane>
+                              <TextArea id="console" layoutX="96.0" layoutY="329.0" prefHeight="200.0" prefWidth="499.0" />
+                           </children>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </AnchorPane>
                      </content>
-                   </Tab>
-                   <Tab text="Open/Close">
+                  </Tab>
+                  <Tab text="Deposit/Withdraw">
                      <content>
-                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                      </content>
-                   </Tab>
-                     <Tab text="Account Database">
-                       <content>
-                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                       </content>
-                     </Tab>
-                 </tabs>
-               </TabPane>
-            </center>
-         </BorderPane>
-      </children></AnchorPane>
-</Scene>
+                  </Tab>
+                  <Tab text="Account Database">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
