@@ -24,6 +24,10 @@ public class TransactionManagerController {
     private ToggleGroup accountTypeGroup;
     @FXML
     private VBox campusGroupContainer;
+    @FXML
+    private CheckBox loyaltyCheckbox;
+    @FXML
+    private VBox loyaltyGroupContainer;
     String[] fields = new String[FIELDS_FOR_OPEN_CLOSE];
     Date accountDob;
     double initialDeposit;
@@ -66,6 +70,7 @@ public class TransactionManagerController {
 
     private void openChecking(String fName, String lName, DatePicker dob, double initialDeposit) {
     }
+
 
     @FXML
     protected boolean checkFields(){
@@ -112,6 +117,21 @@ public class TransactionManagerController {
         }else {
             campusGroupContainer.setDisable(true);
         }
+    }
+
+    @FXML
+    protected void toggleLoyalty(){
+        if(savings.isSelected() || moneyMarket.isSelected()){
+            loyaltyCheckbox.setDisable(false);
+        }else {
+            loyaltyCheckbox.setDisable(true);
+        }
+    }
+
+    @FXML
+    protected void campusAndLoyalty() {
+        toggleLoyalty();
+        toggleCampus();
     }
 
     private boolean isValidDeposit(){
