@@ -46,7 +46,7 @@
                                                 <Insets />
                                              </VBox.margin>
                                           </Label>
-                                          <TextField id="firstName">
+                                          <TextField id="firstName" fx:id="firstName">
                                              <VBox.margin>
                                                 <Insets bottom="10.0" top="10.0" />
                                              </VBox.margin>
@@ -58,7 +58,7 @@
                                                       <Insets bottom="5.0" />
                                                    </VBox.margin>
                                                 </Label>
-                                                <TextField id="lastName">
+                                                <TextField id="lastName" fx:id="lastName">
                                                    <padding>
                                                       <Insets top="10.0" />
                                                    </padding>
@@ -74,37 +74,37 @@
                                                 <Insets bottom="5.0" />
                                              </VBox.margin>
                                           </Label>
-                                          <DatePicker id="dob" />
+                                          <DatePicker id="dob" fx:id="dob" editable="false" />
                                        </children>
                                     </VBox>
-                                    <VBox prefHeight="90.0" prefWidth="137.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <VBox fx:id="campusContainer" prefHeight="90.0" prefWidth="137.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <children>
-                                          <RadioButton id="checking" mnemonicParsing="false" text="Checking">
+                                          <RadioButton id="checking" fx:id="checking" mnemonicParsing="false" onAction="#toggleCampus" selected="true" text="Checking">
                                              <VBox.margin>
                                                 <Insets bottom="5.0" left="20.0" />
                                              </VBox.margin>
                                              <toggleGroup>
-                                                <ToggleGroup fx:id="TypeAccount" />
+                                                <ToggleGroup fx:id="accountTypeGroup" />
                                              </toggleGroup>
                                           </RadioButton>
-                                          <RadioButton id="collegeChecking" mnemonicParsing="false" prefHeight="18.0" prefWidth="149.0" text="College Checking" toggleGroup="$TypeAccount">
+                                          <RadioButton id="collegeChecking" fx:id="collegeChecking" mnemonicParsing="false" onAction="#toggleCampus" prefHeight="18.0" prefWidth="149.0" text="College Checking" toggleGroup="$accountTypeGroup">
                                              <VBox.margin>
                                                 <Insets bottom="5.0" left="20.0" />
                                              </VBox.margin>
                                           </RadioButton>
-                                          <RadioButton id="savings" mnemonicParsing="false" text="Savings" toggleGroup="$TypeAccount">
+                                          <RadioButton id="savings" fx:id="savings" mnemonicParsing="false" onAction="#toggleCampus" text="Savings" toggleGroup="$accountTypeGroup">
                                              <VBox.margin>
                                                 <Insets bottom="5.0" left="20.0" />
                                              </VBox.margin>
                                           </RadioButton>
-                                          <RadioButton id="moneyMarket" mnemonicParsing="false" text="Money Market" toggleGroup="$TypeAccount">
+                                          <RadioButton id="moneyMarket" fx:id="moneyMarket" mnemonicParsing="false" onAction="#toggleCampus" text="Money Market" toggleGroup="$accountTypeGroup">
                                              <VBox.margin>
                                                 <Insets bottom="5.0" left="20.0" />
                                              </VBox.margin>
                                           </RadioButton>
                                        </children>
                                     </VBox>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                    <VBox fx:id="campusGroupContainer" disable="true" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                        <children>
                                           <RadioButton id="newBrunswick" mnemonicParsing="false" prefHeight="8.0" prefWidth="110.0" text="New Brunswick">
                                              <VBox.margin>
@@ -128,12 +128,12 @@
                                     </VBox>
                                     <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                        <children>
-                                          <Button id="openButton" mnemonicParsing="false" onAction="#openAccount" prefHeight="26.0" prefWidth="141.0" text="Open Account">
+                                          <Button id="openButton" fx:id="open" mnemonicParsing="false" onAction="#openAccount" prefHeight="26.0" prefWidth="141.0" text="Open Account">
                                              <VBox.margin>
                                                 <Insets bottom="5.0" left="20.0" top="10.0" />
                                              </VBox.margin>
                                           </Button>
-                                          <Button id="closeButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="142.0" text="Close Account">
+                                          <Button id="closeButton" fx:id="close" mnemonicParsing="false" prefHeight="26.0" prefWidth="142.0" text="Close Account">
                                              <VBox.margin>
                                                 <Insets left="20.0" top="5.0" />
                                              </VBox.margin>
@@ -143,7 +143,7 @@
                                     <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
                                        <children>
                                           <Label text="Open Deposit" />
-                                          <TextField id="openDeposit" />
+                                          <TextField id="openDeposit" fx:id="openDeposit" />
                                        </children>
                                     </VBox>
                                  </children>
