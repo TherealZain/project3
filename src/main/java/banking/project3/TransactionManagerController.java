@@ -36,7 +36,7 @@ public class TransactionManagerController {
 
     @FXML
     protected void handleOpen(ActionEvent event) {
-        String accountType =accountTypeGroup.getSelectedToggle().toString();
+        String accountType = accountTypeGroup.getSelectedToggle().toString();
         if(checkFields() && isValidDeposit() &&
                 ageCheck(accountDob, accountType)){
             switch (accountType) {
@@ -77,6 +77,11 @@ public class TransactionManagerController {
             System.out.println(fName + " " + lName + " " + dob.dateString()
                     + "(" + accountType + ") is already in the database.");
         }
+    }
+
+    @FXML
+    protected void handleWithdraw(ActionEvent event) {
+        
     }
 
     @FXML
