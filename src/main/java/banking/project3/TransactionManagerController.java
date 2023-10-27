@@ -3,11 +3,7 @@ package banking.project3;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
-import java.util.Calendar;
-
-import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 
 
@@ -25,6 +21,7 @@ public class TransactionManagerController {
     @FXML
     private VBox campusGroupContainer;
     String[] fields = new String[FIELDS_FOR_OPEN_CLOSE];
+    private AccountDatabase accountDatabase = new AccountDatabase();
     Date accountDob;
     double initialDeposit;
     private static final int FIELDS_FOR_OPEN_CLOSE = 6;
@@ -38,33 +35,48 @@ public class TransactionManagerController {
 
 
     @FXML
-    protected void openAccount(ActionEvent event) {
+    protected void handleOpen(ActionEvent event) {
         String accountType =accountTypeGroup.getSelectedToggle().toString();
         if(checkFields() && isValidDeposit() &&
                 ageCheck(accountDob, accountType)){
             switch (accountType) {
                 case "Checking" -> openChecking(fields[FNAME_INPUT], fields[LNAME_INPUT],
-                        dob, initialDeposit);
+                        accountDob, initialDeposit);
                 case "College Checking" -> openCollegeChecking(fields[FNAME_INPUT], fields[LNAME_INPUT],
-                        dob, initialDeposit);
-                case "Savings" -> openSavings(fields[FNAME_INPUT], fields[LNAME_INPUT], dob,
+                        accountDob, initialDeposit);
+                case "Savings" -> openSavings(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob,
                         initialDeposit);
                 case "Money Market" -> openMoneyMarket(fields[FNAME_INPUT], fields[LNAME_INPUT]
-                        , dob, initialDeposit);
+                        , accountDob, initialDeposit);
             }
         };
     }
 
-    private void openMoneyMarket(String fName, String lName, DatePicker dob, double initialDeposit) {
+    private void openMoneyMarket(String fName, String lName, Date dob, double initialDeposit) {
+
     }
 
-    private void openSavings(String fName, String lName, DatePicker dob, double initialDeposit) {
+    private void openSavings(String fName, String lName, Date dob, double initialDeposit) {
     }
 
-    private void openCollegeChecking(String fName, String lName, DatePicker dob, double initialDeposit) {
+    private void openCollegeChecking(String fName, String lName, Date dob, double initialDeposit) {
     }
 
-    private void openChecking(String fName, String lName, DatePicker dob, double initialDeposit) {
+    private void openChecking(String fName, String lName, Date dob, double initialDeposit) {
+        Checking newChecking = new Checking(new Profile(fName, lName, dob),
+                initialDeposit);
+        openAccount(fName, lName, dob, newChecking, "C");
+    }
+
+    private void openAccount(String fName, String lName, Date dob,
+                             Account account, String accountType) {
+        if (accountDatabase.open(account)) {
+            System.out.println(fName + " " + lName + " " +
+                    dob.dateString() + "(" + accountType + ") opened.");
+        } else {
+            System.out.println(fName + " " + lName + " " + dob.dateString()
+                    + "(" + accountType + ") is already in the database.");
+        }
     }
 
     @FXML
