@@ -52,20 +52,16 @@ public class TransactionManagerController {
         };
     }
 
-    private void openMoneyMarket(String fName, String lName, Date dob, double initialDeposit) {
-
-    }
-
-    private void openSavings(String fName, String lName, Date dob, double initialDeposit) {
-    }
-
-    private void openCollegeChecking(String fName, String lName, Date dob, double initialDeposit) {
-    }
-
     private void openChecking(String fName, String lName, Date dob, double initialDeposit) {
         Checking newChecking = new Checking(new Profile(fName, lName, dob),
                 initialDeposit);
         openAccount(fName, lName, dob, newChecking, "C");
+    }
+    private void openCollegeChecking(String fName, String lName, Date dob, double initialDeposit) {
+    }
+    private void openSavings(String fName, String lName, Date dob, double initialDeposit) {
+    }
+    private void openMoneyMarket(String fName, String lName, Date dob, double initialDeposit) {
     }
 
     private void openAccount(String fName, String lName, Date dob,
@@ -81,7 +77,48 @@ public class TransactionManagerController {
 
     @FXML
     protected void handleWithdraw(ActionEvent event) {
-        
+        String accountType = accountTypeGroup.getSelectedToggle().toString();
+        if (checkFields()) {
+            switch (accountType) {
+                case "Checking" -> withdrawChecking(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob);
+                case "College Checking" -> withdrawCollegeChecking(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob);
+                case "Savings" -> withdrawSavings(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob);
+                case "Money Market" -> withdrawMoneyMarket(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob);
+            }
+        };
+    }
+
+    private void withdrawChecking(String fName, String lName, Date dob, double withdraw) {
+        Profile profileToWithdraw = new Profile(fName, lName, dob);
+        Checking accountToWithdraw = new Checking(profileToWithdraw, withdraw);
+        withdrawAccount(fName, lName, dob, accountToWithdraw, withdraw, "C");
+    }
+    private void withdrawCollegeChecking(String fName, String lName, Date dob) {
+        // your logic here
+    }
+    private void withdrawSavings(String fName, String lName, Date dob) {
+        // your logic here
+    }
+    private void withdrawMoneyMarket(String fName, String lName, Date dob) {
+        // your logic here
+    }
+
+    private void withdrawAccount(String fName, String lName, Date dob,
+                                 Account account, double withdraw, String accountType) {
+        if (!accountDatabase.withdraw(account)) {
+            if (withdraw > account.balance) {
+                System.out.println(fName + " " + lName + " " + dob.dateString()
+                        + "(" + accountType + ") " + "Withdraw - " +
+                        "insufficient fund.");
+            }
+            else {
+                System.out.println(fName + " " + lName + " " + dob.dateString()
+                        + "(" + accountType + ") is not in the database.");
+            }
+            return;
+        }
+        System.out.println(fName + " " + lName + " " + dob.dateString() + "("
+                + accountType + ") Withdraw - balance updated.");
     }
 
     @FXML
