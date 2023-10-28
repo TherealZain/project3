@@ -58,6 +58,58 @@ public class TransactionManagerController {
         }
     }
 
+    @FXML
+    protected void handleClose(ActionEvent event){
+        RadioButton selectedRadioButton = (RadioButton) accountTypeGroup.getSelectedToggle();
+        String accountType = selectedRadioButton.getText();
+        if(checkFields() && isValidDeposit() &&
+                ageCheck(accountDob, accountType)){
+            switch (accountType) {
+                case "C" -> closeChecking(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob);
+                case "CC" -> closeCollegeChecking(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob);
+                case "S" -> closeSavings(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob);
+                case "MM" -> closeMoneyMarket(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob);
+            }
+        }
+    }
+
+    protected void closeChecking(String fName, String lName, Date dob){
+        Profile profileToClose = new Profile(fName, lName, dob);
+        Checking accountToClose = new Checking(profileToClose, ZERO_QUANTITY);
+        closeAccount(fName, lName, dob, accountToClose, "C");
+    }
+
+    protected void closeCollegeChecking(String fName, String lName, Date dob){
+        Profile profileToClose = new Profile(fName, lName, dob);
+        CollegeChecking accountToClose = new CollegeChecking(profileToClose, ZERO_QUANTITY, null);
+        closeAccount(fName, lName, dob, accountToClose, "CC");
+    }
+
+
+
+    protected void closeSavings(String fName, String lName, Date dob){
+        Profile profileToClose = new Profile(fName, lName, dob);
+        Savings accountToClose = new Savings(profileToClose, ZERO_QUANTITY);
+        closeAccount(fName, lName, dob, accountToClose, "S");
+    }
+
+    protected void closeMoneyMarket(String fName, String lName, Date dob){
+        Profile profileToClose = new Profile(fName, lName, dob);
+        MoneyMarket accountToClose = new MoneyMarket(profileToClose, ZERO_QUANTITY, true);
+        closeAccount(fName, lName, dob, accountToClose, "MM");
+    }
+
+    private void closeAccount(String fName, String lName, Date dob,
+                              Account account, String accountType) {
+        if (accountDatabase.close(account)) {
+            openCloseOutput.setText(fName + " " + lName + " " + dob.dateString()
+                    + "(" + accountType + ") has been closed.");
+        } else {
+            openCloseOutput.setText(fName + " " + lName + " " + dob.dateString()
+                    + "(" + accountType + ") is not in the database.");
+        }
+    }
+
     private void openChecking(String fName, String lName, Date dob, double initialDeposit) {
         Checking newChecking = new Checking(new Profile(fName, lName, dob),
                 initialDeposit);

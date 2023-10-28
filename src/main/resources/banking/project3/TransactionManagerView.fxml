@@ -133,7 +133,7 @@
                                                 <Insets bottom="5.0" left="20.0" top="10.0" />
                                              </VBox.margin>
                                           </Button>
-                                          <Button id="closeButton" fx:id="close" mnemonicParsing="false" prefHeight="26.0" prefWidth="142.0" text="Close Account">
+                                          <Button id="closeButton" fx:id="close" mnemonicParsing="false" onAction="#handleClose" prefHeight="26.0" prefWidth="142.0" text="Close Account">
                                              <VBox.margin>
                                                 <Insets left="20.0" top="5.0" />
                                              </VBox.margin>
