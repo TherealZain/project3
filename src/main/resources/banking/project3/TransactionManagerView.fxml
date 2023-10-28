@@ -34,12 +34,12 @@
                                  </columnConstraints>
                                  <rowConstraints>
                                     <RowConstraints />
-                                    <RowConstraints maxHeight="123.5" minHeight="10.0" prefHeight="116.5" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="86.77147674560547" minHeight="10.0" prefHeight="68.5" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="157.5" minHeight="10.0" prefHeight="145.5" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="90.5" minHeight="10.0" prefHeight="81.5" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="106.00234985351562" minHeight="4.5" prefHeight="51.5" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <VBox prefHeight="48.0" prefWidth="223.0" GridPane.rowIndex="1">
+                                    <VBox prefHeight="132.0" prefWidth="281.0" GridPane.rowIndex="1">
                                        <children>
                                           <Label text="First Name">
                                              <VBox.margin>
@@ -55,13 +55,13 @@
                                              <children>
                                                 <Label text="Last Name">
                                                    <VBox.margin>
-                                                      <Insets bottom="5.0" />
+                                                      <Insets />
                                                    </VBox.margin>
                                                 </Label>
                                                 <TextField id="lastName" fx:id="lastName">
-                                                   <padding>
-                                                      <Insets top="10.0" />
-                                                   </padding>
+                                                   <VBox.margin>
+                                                      <Insets bottom="10.0" top="10.0" />
+                                                   </VBox.margin>
                                                 </TextField>
                                              </children>
                                           </VBox>
@@ -106,7 +106,7 @@
                                     </VBox>
                                     <VBox fx:id="campusGroupContainer" disable="true" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                        <children>
-                                          <RadioButton id="newBrunswick" mnemonicParsing="false" prefHeight="8.0" prefWidth="110.0" text="New Brunswick">
+                                          <RadioButton id="newBrunswick" fx:id="newBrunswick" mnemonicParsing="false" prefHeight="8.0" prefWidth="110.0" text="New Brunswick">
                                              <VBox.margin>
                                                 <Insets bottom="5.0" left="20.0" top="10.0" />
                                              </VBox.margin>
@@ -114,12 +114,12 @@
                                                 <ToggleGroup fx:id="campus" />
                                              </toggleGroup>
                                           </RadioButton>
-                                          <RadioButton id="newark" mnemonicParsing="false" text="Newark" toggleGroup="$campus">
+                                          <RadioButton id="newark" fx:id="newark" mnemonicParsing="false" text="Newark" toggleGroup="$campus">
                                              <VBox.margin>
                                                 <Insets bottom="5.0" left="20.0" />
                                              </VBox.margin>
                                           </RadioButton>
-                                          <RadioButton id="camden" mnemonicParsing="false" text="Camden" toggleGroup="$campus">
+                                          <RadioButton id="camden" fx:id="camden" mnemonicParsing="false" text="Camden" toggleGroup="$campus">
                                              <VBox.margin>
                                                 <Insets bottom="5.0" left="20.0" />
                                              </VBox.margin>
@@ -148,7 +148,7 @@
                                     </VBox>
                                  </children>
                               </GridPane>
-                              <TextArea id="console" layoutX="96.0" layoutY="329.0" prefHeight="200.0" prefWidth="499.0" />
+                              <TextArea id="openCloseOutput" fx:id="openCloseOutput" editable="false" layoutX="96.0" layoutY="329.0" prefHeight="200.0" prefWidth="499.0" />
                            </children>
                            <padding>
                               <Insets top="10.0" />

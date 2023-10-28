@@ -19,7 +19,11 @@ public class TransactionManagerController {
     @FXML
     private ToggleGroup accountTypeGroup;
     @FXML
+    private ToggleGroup campus;
+    @FXML
     private VBox campusGroupContainer;
+    @FXML
+    private TextArea openCloseOutput;
     String[] fields = new String[FIELDS_FOR_OPEN_CLOSE];
     private AccountDatabase accountDatabase = new AccountDatabase();
     Date accountDob;
@@ -36,10 +40,12 @@ public class TransactionManagerController {
 
     @FXML
     protected void handleOpen(ActionEvent event) {
-        String accountType = accountTypeGroup.getSelectedToggle().toString();
+        RadioButton selectedRadioButton = (RadioButton) accountTypeGroup.getSelectedToggle();
+        String accountType = selectedRadioButton.getText();
         if(checkFields() && isValidDeposit() &&
                 ageCheck(accountDob, accountType)){
             switch (accountType) {
+
                 case "Checking" -> openChecking(fields[FNAME_INPUT], fields[LNAME_INPUT],
                         accountDob, initialDeposit);
                 case "College Checking" -> openCollegeChecking(fields[FNAME_INPUT], fields[LNAME_INPUT],
@@ -49,7 +55,7 @@ public class TransactionManagerController {
                 case "Money Market" -> openMoneyMarket(fields[FNAME_INPUT], fields[LNAME_INPUT]
                         , accountDob, initialDeposit);
             }
-        };
+        }
     }
 
     private void openChecking(String fName, String lName, Date dob, double initialDeposit) {
@@ -58,19 +64,50 @@ public class TransactionManagerController {
         openAccount(fName, lName, dob, newChecking, "C");
     }
     private void openCollegeChecking(String fName, String lName, Date dob, double initialDeposit) {
+        Campus campusEnum = null;
+        try {
+            RadioButton selectedCampus = (RadioButton) campus.getSelectedToggle();
+            String campusString = selectedCampus.getText();
+            campusEnum = Campus.fromCode(campusString);
+            CollegeChecking newCollegeChecking = new CollegeChecking(new
+                    Profile(fName, lName, dob), initialDeposit, campusEnum);
+            openAccount(fName, lName, dob, newCollegeChecking, "CC");
+        } catch (NullPointerException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Missing Data");
+            alert.setHeaderText("Please select campus");
+            alert.showAndWait();
+        }
+
+
     }
     private void openSavings(String fName, String lName, Date dob, double initialDeposit) {
+        Savings newSavings = new Savings(new Profile(fName, lName, dob),
+                initialDeposit);
+        openAccount(fName, lName, dob, newSavings, "S");
     }
     private void openMoneyMarket(String fName, String lName, Date dob, double initialDeposit) {
+        if (initialDeposit < MoneyMarket.MIN_BALANCE_FEE_WAIVED) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Please enter valid amount");
+            alert.setHeaderText("Minimum of $2000 to open a Money Market account.");
+            alert.showAndWait();
+            return;
+        }
+        MoneyMarket newMoneyMarket = new MoneyMarket(new
+                Profile(fName, lName, dob), initialDeposit, true);
+        openAccount(fName, lName, dob, newMoneyMarket, "MM");
     }
 
+    @FXML
     private void openAccount(String fName, String lName, Date dob,
                              Account account, String accountType) {
         if (accountDatabase.open(account)) {
-            System.out.println(fName + " " + lName + " " +
+            openCloseOutput.setText(fName + " " + lName + " " +
                     dob.dateString() + "(" + accountType + ") opened.");
+            System.out.println("Ran");
         } else {
-            System.out.println(fName + " " + lName + " " + dob.dateString()
+            openCloseOutput.setText(fName + " " + lName + " " + dob.dateString()
                     + "(" + accountType + ") is already in the database.");
         }
     }
@@ -80,7 +117,7 @@ public class TransactionManagerController {
         String accountType = accountTypeGroup.getSelectedToggle().toString();
         if (checkFields()) {
             switch (accountType) {
-                case "Checking" -> withdrawChecking(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob);
+                case "Checking" -> withdrawChecking(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob, initialDeposit);
                 case "College Checking" -> withdrawCollegeChecking(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob);
                 case "Savings" -> withdrawSavings(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob);
                 case "Money Market" -> withdrawMoneyMarket(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob);
