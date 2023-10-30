@@ -81,7 +81,8 @@ public class TransactionManagerController {
 
     @FXML
     protected void handleDeposit(ActionEvent event) {
-        String accountType = accountTypeGroupDW.getSelectedToggle().toString();
+        RadioButton selectedRadioButton = (RadioButton)accountTypeGroupDW.getSelectedToggle();
+        String accountType = selectedRadioButton.getText();
         if (checkFieldsWithdrawDeposit() && isValidDeposit()) {
             switch (accountType) {
                 case "Checking" -> depositChecking(fields[FNAME_INPUT],
@@ -98,7 +99,8 @@ public class TransactionManagerController {
 
     @FXML
     protected void handleWithdraw(ActionEvent event) {
-        String accountType = accountTypeGroupDW.getSelectedToggle().toString();
+        RadioButton selectedRadioButton = (RadioButton)accountTypeGroupDW.getSelectedToggle();
+        String accountType = selectedRadioButton.getText();
         if (checkFieldsWithdrawDeposit() && isValidWithdraw()) {
             switch (accountType) {
                 case "Checking" -> withdrawChecking(fields[FNAME_INPUT],
