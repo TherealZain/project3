@@ -269,7 +269,25 @@
                   </Tab>
                   <Tab text="Account Database">
                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TextArea layoutX="96.0" layoutY="329.0" prefHeight="200.0" prefWidth="499.0" />
+                              <VBox layoutX="195.0" layoutY="53.0" prefHeight="221.0" prefWidth="292.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" prefHeight="73.6" prefWidth="292.0" text="Print Accounts">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <Button mnemonicParsing="false" prefHeight="73.6" prefWidth="294.0" text="Print With Fees">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <Button mnemonicParsing="false" prefHeight="73.6" prefWidth="339.0" text="Update Balances" />
+                                 </children>
+                              </VBox>
+                           </children></AnchorPane>
                      </content>
                   </Tab>
                </tabs>
