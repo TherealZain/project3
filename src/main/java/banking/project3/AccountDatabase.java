@@ -13,6 +13,9 @@ public class AccountDatabase {
     private static final int STARTING_NUM_ACCT = 0;
     private static final int RESET_WITHDRAWAL = 0;
     private Account[] accounts; //list of various types of accounts
+
+
+
     private int numAcct; //number of accounts in the array
 
     /**
@@ -151,7 +154,7 @@ public class AccountDatabase {
      * Sorts the accounts array based on the account
      * type using the Selection Sort algorithm.
      */
-    private void selectionSortAccountType() {
+    public void selectionSortAccountType() {
         int n = numAcct;
 
         for (int i = 0; i < n-1; i++) {
@@ -223,6 +226,41 @@ public class AccountDatabase {
         }
     }
 
+    public String accountDatabaseToString(){
+        selectionSortAccountType();
+        String text = "";
+        for (int i = 0; i < numAcct; i++) {
+           text += accounts[i].toString() + "\n";
+        }
+        return text;
+    }
+
+    public String accountDatabaseFeesToString(){
+        selectionSortAccountType();
+        String text = "";
+        for(int i = 0; i< numAcct; i++){
+            text += accounts[i].stringWithFees() + "\n";
+        }
+        return text;
+    }
+
+    public String accountDatabaseUBToString(){
+        selectionSortAccountType();
+        String text = "";
+        selectionSortAccountType();
+        for(int i = 0; i < numAcct; i++) {
+            accounts[i].balance += accounts[i].monthlyInterest();
+            accounts[i].balance -= accounts[i].monthlyFee();
+            if (accounts[i] instanceof MoneyMarket) {
+                MoneyMarket mmAccount = (MoneyMarket) accounts[i];
+                mmAccount.setWithdrawal(RESET_WITHDRAWAL);
+                accounts[i] = mmAccount;
+            }
+            text += accounts[i].toString() + "\n";
+        }
+        return text;
+    }
+
     /**
      * Prints the list of accounts along with their fees.
      */
@@ -256,5 +294,9 @@ public class AccountDatabase {
      */
     public boolean isEmpty(){
         return numAcct == 0;
+    }
+
+    public int getNumAcct() {
+        return numAcct;
     }
 }

@@ -24,7 +24,7 @@ public class TransactionManagerController {
     @FXML
     private VBox campusGroupContainer;
     @FXML
-    private TextArea openCloseOutput, depositWithdrawOutput;
+    private TextArea openCloseOutput, depositWithdrawOutput, databaseOutput;
     String[] fields = new String[FIELDS_FOR_OPEN_CLOSE];
     private AccountDatabase accountDatabase = new AccountDatabase();
     Date accountDob;
@@ -114,6 +114,45 @@ public class TransactionManagerController {
             }
         }
     }
+    @FXML
+    protected void handlePrint(ActionEvent event){
+        String textToDisplay = "";
+        if (!(accountDatabase.isEmpty())) {
+            textToDisplay += "*Accounts sorted by account type and profile.\n";
+            textToDisplay += accountDatabase.accountDatabaseToString();
+            textToDisplay += ("*end of list.\n");
+        } else textToDisplay += "Account Database is empty!";
+
+        databaseOutput.setText(textToDisplay);
+    }
+
+    @FXML
+    protected void handlePrintWithFees(ActionEvent event){
+        String textToDisplay = "";
+        if (!(accountDatabase.isEmpty())) {
+            textToDisplay += "*Accounts sorted by account type and profile.\n";
+            textToDisplay += accountDatabase.accountDatabaseFeesToString();
+            textToDisplay += ("*end of list.\n");
+        } else textToDisplay += "Account Database is empty!";
+
+        databaseOutput.setText(textToDisplay);
+    }
+
+    @FXML
+    protected void handleUpdateBalances(ActionEvent event){
+        String textToDisplay = "";
+        if (!(accountDatabase.isEmpty())) {
+            textToDisplay += "*Accounts sorted by account type and profile.\n";
+            textToDisplay += accountDatabase.accountDatabaseUBToString();
+            textToDisplay += ("*end of list.\n");
+        } else textToDisplay += "Account Database is empty!";
+
+        databaseOutput.setText(textToDisplay);
+    }
+
+
+
+
 
     protected void closeChecking(String fName, String lName, Date dob){
         Profile profileToClose = new Profile(fName, lName, dob);
