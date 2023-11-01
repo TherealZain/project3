@@ -44,7 +44,7 @@ public class TransactionManagerController {
     protected void handleOpen(ActionEvent event) {
         RadioButton selectedRadioButton = (RadioButton) accountTypeGroup.getSelectedToggle();
         String accountType = selectedRadioButton.getText();
-        if(checkFields() && isValidInitialDeposit() &&
+        if(checkFieldsOpen() && isValidInitialDeposit() &&
                 ageCheck(accountDob, accountType)){
             switch (accountType) {
 
@@ -64,16 +64,16 @@ public class TransactionManagerController {
     protected void handleClose(ActionEvent event){
         RadioButton selectedRadioButton = (RadioButton) accountTypeGroup.getSelectedToggle();
         String accountType = selectedRadioButton.getText();
-        if(checkFields() && isValidInitialDeposit() &&
+        if(checkFieldsClose() && isValidInitialDeposit() &&
                 ageCheck(accountDob, accountType)){
             switch (accountType) {
-                case "C" -> closeChecking(fields[FNAME_INPUT],
+                case "College" -> closeChecking(fields[FNAME_INPUT],
                         fields[LNAME_INPUT], accountDob);
-                case "CC" -> closeCollegeChecking(fields[FNAME_INPUT],
+                case "College Checking" -> closeCollegeChecking(fields[FNAME_INPUT],
                         fields[LNAME_INPUT], accountDob);
-                case "S" -> closeSavings(fields[FNAME_INPUT],
+                case "Savings" -> closeSavings(fields[FNAME_INPUT],
                         fields[LNAME_INPUT], accountDob);
-                case "MM" -> closeMoneyMarket(fields[FNAME_INPUT],
+                case "Money Market" -> closeMoneyMarket(fields[FNAME_INPUT],
                         fields[LNAME_INPUT], accountDob);
             }
         }
@@ -83,7 +83,7 @@ public class TransactionManagerController {
     protected void handleDeposit(ActionEvent event) {
         RadioButton selectedRadioButton = (RadioButton)accountTypeGroupDW.getSelectedToggle();
         String accountType = selectedRadioButton.getText();
-        if (checkFieldsWithdrawDeposit() && isValidDeposit()) {
+        if (checkFieldsDepositWithdraw() && isValidDeposit()) {
             switch (accountType) {
                 case "Checking" -> depositChecking(fields[FNAME_INPUT],
                         fields[LNAME_INPUT], accountDob, amount);
@@ -101,7 +101,7 @@ public class TransactionManagerController {
     protected void handleWithdraw(ActionEvent event) {
         RadioButton selectedRadioButton = (RadioButton)accountTypeGroupDW.getSelectedToggle();
         String accountType = selectedRadioButton.getText();
-        if (checkFieldsWithdrawDeposit() && isValidWithdraw()) {
+        if (checkFieldsDepositWithdraw() && isValidWithdraw()) {
             switch (accountType) {
                 case "Checking" -> withdrawChecking(fields[FNAME_INPUT],
                         fields[LNAME_INPUT], accountDob, amount);
@@ -151,9 +151,6 @@ public class TransactionManagerController {
     }
 
 
-
-
-
     protected void closeChecking(String fName, String lName, Date dob){
         Profile profileToClose = new Profile(fName, lName, dob);
         Checking accountToClose = new Checking(profileToClose, ZERO_QUANTITY);
@@ -199,7 +196,8 @@ public class TransactionManagerController {
         try {
             RadioButton selectedCampus = (RadioButton) campus.getSelectedToggle();
             String campusString = selectedCampus.getText();
-            campusEnum = Campus.fromCode(campusString);
+            String campusCode = convertToCode(campusString);
+            campusEnum = Campus.fromCode(campusCode);
             CollegeChecking newCollegeChecking = new CollegeChecking(new
                     Profile(fName, lName, dob), initialDeposit, campusEnum);
             openAccount(fName, lName, dob, newCollegeChecking, "CC");
@@ -209,9 +207,25 @@ public class TransactionManagerController {
             alert.setHeaderText("Please select campus");
             alert.showAndWait();
         }
-
-
     }
+
+    private String convertToCode(String campusString) {
+        switch (campusString) {
+            case "New Brunswick" -> {
+                return "0";
+            }
+            case "Newark" -> {
+                return "1";
+            }
+            case "Camden" -> {
+                return "2";
+            }
+            default -> {
+                return null;
+            }
+        }
+    }
+
     private void openSavings(String fName, String lName, Date dob, double initialDeposit) {
         Savings newSavings = new Savings(new Profile(fName, lName, dob),
                 initialDeposit);
@@ -236,7 +250,7 @@ public class TransactionManagerController {
         if (accountDatabase.open(account)) {
             openCloseOutput.setText(fName + " " + lName + " " +
                     dob.dateString() + "(" + accountType + ") opened.");
-            System.out.println("Ran");
+
         } else {
             openCloseOutput.setText(fName + " " + lName + " " + dob.dateString()
                     + "(" + accountType + ") is already in the database.");
@@ -284,17 +298,17 @@ public class TransactionManagerController {
     }
     private void withdrawCollegeChecking(String fName, String lName, Date dob, double withdraw) {
         Profile profileToWithdraw = new Profile(fName, lName, dob);
-        Checking accountToWithdraw = new Checking(profileToWithdraw, withdraw);
+        CollegeChecking accountToWithdraw = new CollegeChecking(profileToWithdraw, withdraw, null);
         withdrawAccount(fName, lName, dob, accountToWithdraw, withdraw, "CC");
     }
     private void withdrawSavings(String fName, String lName, Date dob, double withdraw) {
         Profile profileToWithdraw = new Profile(fName, lName, dob);
-        Checking accountToWithdraw = new Checking(profileToWithdraw, withdraw);
+        Savings accountToWithdraw = new Savings(profileToWithdraw, withdraw);
         withdrawAccount(fName, lName, dob, accountToWithdraw, withdraw, "S");
     }
     private void withdrawMoneyMarket(String fName, String lName, Date dob, double withdraw) {
         Profile profileToWithdraw = new Profile(fName, lName, dob);
-        Checking accountToWithdraw = new Checking(profileToWithdraw, withdraw);
+        MoneyMarket accountToWithdraw = new MoneyMarket(profileToWithdraw, withdraw, true);
         withdrawAccount(fName, lName, dob, accountToWithdraw, withdraw, "MM");
     }
 
@@ -314,11 +328,10 @@ public class TransactionManagerController {
         }
         depositWithdrawOutput.setText(fName + " " + lName + " " + dob.dateString() + "("
                 + accountType + ") Withdraw - balance updated.");
-        System.out.println("Ran");
     }
 
     @FXML
-    protected boolean checkFields(){
+    protected boolean checkFieldsOpen(){
         if (firstName.getText() == null || firstName.getText().isEmpty() ||
                 lastName.getText() == null || lastName.getText().isEmpty() ||
                 openDeposit.getText() == null || openDeposit.getText().isEmpty() ||
@@ -326,7 +339,7 @@ public class TransactionManagerController {
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Missing Data");
-            alert.setHeaderText("Please fill all values");
+            alert.setHeaderText("Please fill all values.");
             alert.showAndWait();
             return false;
         }
@@ -341,14 +354,44 @@ public class TransactionManagerController {
         catch(NullPointerException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Missing Data");
-            alert.setHeaderText("Please fill all values");
+            alert.setHeaderText("Please fill all values.");
             alert.showAndWait();
             return false;
         }
         catch (NumberFormatException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Please enter valid amount");
-            alert.setHeaderText("Invalid deposit for opening");
+            alert.setTitle("Invalid Amount");
+            alert.setHeaderText("Not a valid amount.");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
+    }
+
+    @FXML
+    protected boolean checkFieldsClose(){
+        if (firstName.getText() == null || firstName.getText().isEmpty() ||
+                lastName.getText() == null || lastName.getText().isEmpty() ||
+                dob.getValue() == null) {
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Missing Data");
+            alert.setHeaderText("Please fill all values.");
+            alert.showAndWait();
+            return false;
+        }
+        try {
+            fields[FNAME_INPUT] = firstName.getText();
+            fields[LNAME_INPUT] = lastName.getText();
+            fields[DEPOSIT_INPUT] = openDeposit.getText();
+            initialDeposit = Double.parseDouble(fields[DEPOSIT_INPUT]);
+            accountDob = new Date(dob.getValue().getYear(),
+                    dob.getValue().getMonthValue(), dob.getValue().getDayOfMonth());
+        }
+        catch(NullPointerException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Missing Data");
+            alert.setHeaderText("Please fill all values.");
             alert.showAndWait();
             return false;
         }
@@ -360,7 +403,7 @@ public class TransactionManagerController {
      * @return
      */
     @FXML
-    protected boolean checkFieldsWithdrawDeposit(){
+    protected boolean checkFieldsDepositWithdraw(){
         if (firstNameDW.getText() == null || firstNameDW.getText().isEmpty() ||
                 lastNameDW.getText() == null || lastNameDW.getText().isEmpty() ||
                 depositOrWithdraw.getText() == null || depositOrWithdraw.getText().isEmpty()
@@ -368,7 +411,7 @@ public class TransactionManagerController {
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Missing Data");
-            alert.setHeaderText("Please fill all values");
+            alert.setHeaderText("Please fill all values.");
             alert.showAndWait();
             return false;
         }
@@ -383,14 +426,14 @@ public class TransactionManagerController {
         catch(NullPointerException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Missing Data");
-            alert.setHeaderText("Please fill all values");
+            alert.setHeaderText("Please fill all values.");
             alert.showAndWait();
             return false;
         }
         catch (NumberFormatException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Please enter valid amount");
-            alert.setHeaderText("Invalid deposit for opening");
+            alert.setTitle("Invalid Amount");
+            alert.setHeaderText("Not a valid amount.");
             alert.showAndWait();
             return false;
         }
@@ -409,8 +452,8 @@ public class TransactionManagerController {
     private boolean isValidInitialDeposit(){
         if (initialDeposit <= ZERO_QUANTITY) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Please enter valid amount");
-            alert.setHeaderText("Initial Deposit cannot be 0 or less than 0");
+            alert.setTitle("Invalid Amount");
+            alert.setHeaderText("Initial Deposit cannot be 0 or negative.");
             alert.showAndWait();
             return false;
         }
@@ -422,19 +465,10 @@ public class TransactionManagerController {
      * @return
      */
     private boolean isValidWithdraw() {
-        try {
-            amount = Double.parseDouble(depositOrWithdraw.getText());
-        } catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Please enter a valid withdrawal amount");
-            alert.setHeaderText("Withdraw must be a number");
-            alert.showAndWait();
-            return false;
-        }
         if (amount <= ZERO_QUANTITY) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid Amount");
-            alert.setHeaderText("Withdrawal amount cannot be 0 or negative.");
+            alert.setHeaderText("Withdrawal - amount cannot be 0 or negative.");
             alert.showAndWait();
             return false;
         }
@@ -442,19 +476,10 @@ public class TransactionManagerController {
     }
 
     private boolean isValidDeposit() {
-        try {
-            amount = Double.parseDouble(depositOrWithdraw.getText());
-        } catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Please enter a valid deposit amount");
-            alert.setHeaderText("Deposit must be a number");
-            alert.showAndWait();
-            return false;
-        }
         if (amount <= ZERO_QUANTITY) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid Amount");
-            alert.setHeaderText("Deposit amount cannot be 0 or negative.");
+            alert.setHeaderText("Deposit - amount cannot be 0 or negative.");
             alert.showAndWait();
             return false;
         }
