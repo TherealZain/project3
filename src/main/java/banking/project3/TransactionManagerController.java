@@ -51,9 +51,9 @@ public class TransactionManagerController {
     private static final int LOYALTY_PART = 5;
     private static final int CAMPUS_CODE_PART = 5;
     private static final int DATE_COMPONENTS_LENGTH = 3;
-    private static final int YEAR_PART = 3;
-    private static final int MONTH_PART = 3;
-    private static final int DAY_PART = 3;
+    private static final int YEAR_PART = 2;
+    private static final int MONTH_PART = 0;
+    private static final int DAY_PART = 1;
 
 
     @FXML
