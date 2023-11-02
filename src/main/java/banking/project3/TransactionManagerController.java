@@ -4,7 +4,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.Scanner;
 
 
 public class TransactionManagerController {
@@ -16,7 +21,7 @@ public class TransactionManagerController {
     private RadioButton checking, collegeChecking, savings, moneyMarket,
             checkingDW, collegeCheckingDW, savingsDW, moneyMarketDW;
     @FXML
-    private Button open, close, withdraw, deposit;
+    private Button open, close, withdraw, deposit, loadAccounts;
     @FXML
     private ToggleGroup accountTypeGroup, accountTypeGroupDW;
     @FXML
@@ -38,7 +43,61 @@ public class TransactionManagerController {
     private static final double MIN_AGE_TO_TO_OPEN = 16;
     private static final double MAX_AGE_TO_OPEN_CC = 24;
 
+    private static final String LOYAL = "1";
 
+
+    @FXML
+    protected void loadAccountsFromFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Accounts File");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        File selectedFile = fileChooser.showOpenDialog(loadAccounts.getScene().getWindow());
+
+        if (selectedFile != null) {
+            processFile(selectedFile);
+        }
+    }
+
+    private void processFile(File file) {
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line == null || line.trim().isEmpty()) {
+                    break;
+                }
+                String[] parts = line.split(",");
+                createAccountFromParts(parts);
+            }
+            databaseOutput.setText("Accounts loaded successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createAccountFromParts(String[] parts) {
+        String accountType = parts[0];
+        String fName = parts[1];
+        String lName = parts[2];
+        Date dob = parseDate(parts[3]);
+        double initialDeposit = Double.parseDouble(parts[4]);
+
+        switch (accountType) {
+            case "S" -> {
+
+                openSavings(fName, lName, dob, initialDeposit);
+            }
+            case "CC" -> {
+                String campusCode = parts[5];
+                openCollegeCheckingLoaded(fName, lName, dob, initialDeposit, campusCode);
+            }
+            case "C" -> openChecking(fName, lName, dob, initialDeposit);
+            case "MM" -> openMoneyMarket(fName, lName, dob, initialDeposit);
+            default -> System.out.println("Unknown account type: " + accountType);
+        }
+    }
 
     @FXML
     protected void handleOpen(ActionEvent event) {
@@ -47,7 +106,6 @@ public class TransactionManagerController {
         if(checkFieldsOpen() && isValidInitialDeposit() &&
                 ageCheck(accountDob, accountType)){
             switch (accountType) {
-
                 case "Checking" -> openChecking(fields[FNAME_INPUT], fields[LNAME_INPUT],
                         accountDob, initialDeposit);
                 case "College Checking" -> openCollegeChecking(fields[FNAME_INPUT], fields[LNAME_INPUT],
@@ -173,20 +231,18 @@ public class TransactionManagerController {
         }
     }
 
-    private String convertToCode(String campusString) {
-        switch (campusString) {
-            case "New Brunswick" -> {
-                return "0";
-            }
-            case "Newark" -> {
-                return "1";
-            }
-            case "Camden" -> {
-                return "2";
-            }
-            default -> {
-                return null;
-            }
+    private void openCollegeCheckingLoaded(String fName, String lName, Date dob, double initialDeposit, String campusCode) {
+        Campus campusEnum = null;
+        try {
+            campusEnum = Campus.fromCode(campusCode);
+            CollegeChecking newCollegeChecking = new CollegeChecking(new
+                    Profile(fName, lName, dob), initialDeposit, campusEnum);
+            openAccount(fName, lName, dob, newCollegeChecking, "CC");
+        } catch (NullPointerException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Missing Data");
+            alert.setHeaderText("Please enter campus code");
+            alert.showAndWait();
         }
     }
 
@@ -332,112 +388,71 @@ public class TransactionManagerController {
                 + accountType + ") Withdraw - balance updated.");
     }
 
+    private boolean showAlert(String title, String header) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.showAndWait();
+        return false;
+    }
+
+    private boolean checkTextField(TextField textField) {
+        return textField == null || textField.getText().isEmpty();
+    }
+
+    private boolean checkDateField(DatePicker datePicker) {
+        return datePicker == null || datePicker.getValue() == null;
+    }
+
+    private void populateFields(TextField fNameField, TextField lNameField, TextField depositField, DatePicker dobPicker) {
+        fields[FNAME_INPUT] = fNameField.getText();
+        fields[LNAME_INPUT] = lNameField.getText();
+        fields[DEPOSIT_INPUT] = depositField.getText();
+        initialDeposit = Double.parseDouble(fields[DEPOSIT_INPUT]);
+        amount = initialDeposit;
+        accountDob = new Date(dobPicker.getValue().getYear(),
+                dobPicker.getValue().getMonthValue(), dobPicker.getValue().getDayOfMonth());
+    }
+
     @FXML
     protected boolean checkFieldsOpen(){
-        if (firstName.getText() == null || firstName.getText().isEmpty() ||
-                lastName.getText() == null || lastName.getText().isEmpty() ||
-                openDeposit.getText() == null || openDeposit.getText().isEmpty() ||
-                dob.getValue() == null) {
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Missing Data");
-            alert.setHeaderText("Please fill all values.");
-            alert.showAndWait();
-            return false;
+        if (checkTextField(firstName) || checkTextField(lastName) || checkTextField(openDeposit) || checkDateField(dob)) {
+            return showAlert("Missing Data", "Please fill all values.");
         }
         try {
-            fields[FNAME_INPUT] = firstName.getText();
-            fields[LNAME_INPUT] = lastName.getText();
-            fields[DEPOSIT_INPUT] = openDeposit.getText();
-            initialDeposit = Double.parseDouble(fields[DEPOSIT_INPUT]);
-            accountDob = new Date(dob.getValue().getYear(),
-                    dob.getValue().getMonthValue(), dob.getValue().getDayOfMonth());
-        }
-        catch(NullPointerException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Missing Data");
-            alert.setHeaderText("Please fill all values.");
-            alert.showAndWait();
-            return false;
-        }
-        catch (NumberFormatException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Amount");
-            alert.setHeaderText("Not a valid amount.");
-            alert.showAndWait();
-            return false;
+            populateFields(firstName, lastName, openDeposit, dob);
+        } catch(NullPointerException e) {
+            return showAlert("Missing Data", "Please fill all values.");
+        } catch (NumberFormatException e) {
+            return showAlert("Invalid Amount", "Not a valid amount.");
         }
         return true;
     }
 
     @FXML
     protected boolean checkFieldsClose(){
-        if (firstName.getText() == null || firstName.getText().isEmpty() ||
-                lastName.getText() == null || lastName.getText().isEmpty() ||
-                dob.getValue() == null) {
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Missing Data");
-            alert.setHeaderText("Please fill all values.");
-            alert.showAndWait();
-            return false;
+        if (checkTextField(firstName) || checkTextField(lastName) || checkDateField(dob)) {
+            return showAlert("Missing Data", "Please fill all values.");
         }
         try {
-            fields[FNAME_INPUT] = firstName.getText();
-            fields[LNAME_INPUT] = lastName.getText();
-            fields[DEPOSIT_INPUT] = openDeposit.getText();
-            initialDeposit = Double.parseDouble(fields[DEPOSIT_INPUT]);
-            accountDob = new Date(dob.getValue().getYear(),
-                    dob.getValue().getMonthValue(), dob.getValue().getDayOfMonth());
-        }
-        catch(NullPointerException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Missing Data");
-            alert.setHeaderText("Please fill all values.");
-            alert.showAndWait();
-            return false;
+            populateFields(firstName, lastName, openDeposit, dob);
+        } catch(NullPointerException e) {
+            return showAlert("Missing Data", "Please fill all values.");
         }
         return true;
     }
 
-    /**
-     * ALTER THIS VVV
-     * @return
-     */
     @FXML
     protected boolean checkFieldsDepositWithdraw(){
-        if (firstNameDW.getText() == null || firstNameDW.getText().isEmpty() ||
-                lastNameDW.getText() == null || lastNameDW.getText().isEmpty() ||
-                depositOrWithdraw.getText() == null || depositOrWithdraw.getText().isEmpty()
-                || dobDW.getValue() == null) {
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Missing Data");
-            alert.setHeaderText("Please fill all values.");
-            alert.showAndWait();
-            return false;
+        if (checkTextField(firstNameDW) || checkTextField(lastNameDW) || checkTextField(depositOrWithdraw) || checkDateField(dobDW)) {
+            return showAlert("Missing Data", "Please fill all values.");
         }
         try {
-            fields[FNAME_INPUT] = firstNameDW.getText();
-            fields[LNAME_INPUT] = lastNameDW.getText();
-            fields[DEPOSIT_INPUT] = depositOrWithdraw.getText();
-            amount = Double.parseDouble(fields[DEPOSIT_INPUT]);
-            accountDob = new Date(dobDW.getValue().getYear(),
-                    dobDW.getValue().getMonthValue(), dobDW.getValue().getDayOfMonth());
-        }
-        catch(NullPointerException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Missing Data");
-            alert.setHeaderText("Please fill all values.");
-            alert.showAndWait();
-            return false;
-        }
-        catch (NumberFormatException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Amount");
-            alert.setHeaderText("Not a valid amount.");
-            alert.showAndWait();
-            return false;
+            populateFields(firstNameDW, lastNameDW, depositOrWithdraw, dobDW);
+        } catch(NullPointerException e) {
+            return showAlert("Missing Data", "Please fill all values.");
+        } catch (NumberFormatException e) {
+            return showAlert("Invalid Amount", "Not a valid amount.");
         }
         return true;
     }
@@ -462,10 +477,6 @@ public class TransactionManagerController {
         return true;
     }
 
-    /**
-     * CHANGE THIS
-     * @return
-     */
     private boolean isValidWithdraw() {
         if (amount <= ZERO_QUANTITY) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -525,5 +536,33 @@ public class TransactionManagerController {
         }
         return age;
     }
+    private String convertToCode(String campusString) {
+        switch (campusString) {
+            case "New Brunswick" -> {
+                return "0";
+            }
+            case "Newark" -> {
+                return "1";
+            }
+            case "Camden" -> {
+                return "2";
+            }
+            default -> {
+                return null;
+            }
+        }
+    }
+
+    private Date parseDate(String dateString) {
+        String[] dateComponents = dateString.split("/");
+        if (dateComponents.length == 3) {
+            int year = Integer.parseInt(dateComponents[2]);
+            int month = Integer.parseInt(dateComponents[0]);
+            int day = Integer.parseInt(dateComponents[1]);
+            return new Date(year, month, day);
+        }
+        return null;
+    }
+
 
 }
