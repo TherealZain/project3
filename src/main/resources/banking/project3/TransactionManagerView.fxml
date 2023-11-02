@@ -274,6 +274,11 @@
                               <TextArea fx:id="databaseOutput" editable="false" layoutX="96.0" layoutY="329.0" prefHeight="200.0" prefWidth="499.0" />
                               <VBox layoutX="195.0" layoutY="53.0" prefHeight="221.0" prefWidth="292.0">
                                  <children>
+                                    <Button fx:id="loadAccounts" layoutX="10.0" layoutY="164.0" mnemonicParsing="false" onAction="#loadAccountsFromFile" prefHeight="73.6" prefWidth="339.0" text="Load Accounts">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" />
+                                       </VBox.margin>
+                                    </Button>
                                     <Button mnemonicParsing="false" onAction="#handlePrint" prefHeight="73.6" prefWidth="292.0" text="Print Accounts">
                                        <VBox.margin>
                                           <Insets bottom="10.0" />
