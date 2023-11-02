@@ -42,8 +42,18 @@ public class TransactionManagerController {
     private static final int ZERO_QUANTITY = 0;
     private static final double MIN_AGE_TO_TO_OPEN = 16;
     private static final double MAX_AGE_TO_OPEN_CC = 24;
-
     private static final String LOYAL = "1";
+    private static final int ACCOUNT_TYPE_PART = 0;
+    private static final int FNAME_PART = 1;
+    private static final int LNAME_PART = 2;
+    private static final int DOB_PART = 3;
+    private static final int INITIAL_DEPOSIT_PART = 4;
+    private static final int LOYALTY_PART = 5;
+    private static final int CAMPUS_CODE_PART = 5;
+    private static final int DATE_COMPONENTS_LENGTH = 3;
+    private static final int YEAR_PART = 3;
+    private static final int MONTH_PART = 3;
+    private static final int DAY_PART = 3;
 
 
     @FXML
@@ -78,19 +88,19 @@ public class TransactionManagerController {
     }
 
     private void createAccountFromParts(String[] parts) {
-        String accountType = parts[0];
-        String fName = parts[1];
-        String lName = parts[2];
-        Date dob = parseDate(parts[3]);
-        double initialDeposit = Double.parseDouble(parts[4]);
+        String accountType = parts[ACCOUNT_TYPE_PART];
+        String fName = parts[FNAME_PART];
+        String lName = parts[LNAME_PART];
+        Date dob = parseDate(parts[DOB_PART]);
+        double initialDeposit = Double.parseDouble(parts[INITIAL_DEPOSIT_PART]);
 
         switch (accountType) {
             case "S" -> {
-
+                // use LOYALTY_PART variable
                 openSavings(fName, lName, dob, initialDeposit);
             }
             case "CC" -> {
-                String campusCode = parts[5];
+                String campusCode = parts[CAMPUS_CODE_PART];
                 openCollegeCheckingLoaded(fName, lName, dob, initialDeposit, campusCode);
             }
             case "C" -> openChecking(fName, lName, dob, initialDeposit);
@@ -555,14 +565,13 @@ public class TransactionManagerController {
 
     private Date parseDate(String dateString) {
         String[] dateComponents = dateString.split("/");
-        if (dateComponents.length == 3) {
-            int year = Integer.parseInt(dateComponents[2]);
-            int month = Integer.parseInt(dateComponents[0]);
-            int day = Integer.parseInt(dateComponents[1]);
+        if (dateComponents.length == DATE_COMPONENTS_LENGTH) {
+            int year = Integer.parseInt(dateComponents[YEAR_PART]);
+            int month = Integer.parseInt(dateComponents[MONTH_PART]);
+            int day = Integer.parseInt(dateComponents[DAY_PART]);
             return new Date(year, month, day);
         }
         return null;
     }
-
 
 }
