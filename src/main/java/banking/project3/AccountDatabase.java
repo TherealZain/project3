@@ -226,6 +226,10 @@ public class AccountDatabase {
         }
     }
 
+    /**
+     * Displays the list of accounts
+     * @return text of accounts as String
+     */
     public String accountDatabaseToString(){
         selectionSortAccountType();
         String text = "";
@@ -235,6 +239,10 @@ public class AccountDatabase {
         return text;
     }
 
+    /**
+     * Displays the list of accounts along with their fees/interests
+     * @return text of accounts as String
+     */
     public String accountDatabaseFeesToString(){
         selectionSortAccountType();
         String text = "";
@@ -244,6 +252,11 @@ public class AccountDatabase {
         return text;
     }
 
+    /**
+     * Applies the monthly interest and fees to the accounts and displays
+     * the updated balances
+     * @return text of accounts as String
+     */
     public String accountDatabaseUBToString(){
         selectionSortAccountType();
         String text = "";
@@ -295,6 +308,7 @@ public class AccountDatabase {
     public boolean isEmpty(){
         return numAcct == 0;
     }
+
 
     public int getNumAcct() {
         return numAcct;
