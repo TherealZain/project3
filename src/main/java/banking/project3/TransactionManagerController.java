@@ -108,14 +108,7 @@ public class TransactionManagerController {
             default -> System.out.println("Unknown account type: " + accountType);
         }
     }
-    public void openSavingsLoaded(String fName, String lName, Date dob, double initialDeposit, String loyalty){
-        Savings newSavings = new Savings(new Profile(fName, lName, dob),
-                initialDeposit);
-        if(loyalty.equals(LOYAL)){
-            newSavings.isLoyal = true;
-        }
-        openAccount(fName, lName, dob, newSavings, "S");
-    }
+
 
     @FXML
     protected void handleOpen(ActionEvent event) {
@@ -263,10 +256,16 @@ public class TransactionManagerController {
             alert.showAndWait();
         }
     }
+    public void openSavingsLoaded(String fName, String lName, Date dob, double initialDeposit, String loyalty){
+        Savings newSavings = new Savings(new Profile(fName, lName, dob),
+                initialDeposit);
+        if(loyalty.equals(LOYAL)){
+            newSavings.isLoyal = true;
+        }
+        openAccount(fName, lName, dob, newSavings, "S");
+    }
 
-    /**
-     * CONSIDER LOYALTY AS LAST INPUT?
-     */
+
     private void openSavings(String fName, String lName, Date dob, double initialDeposit) {
         Savings newSavings = new Savings(new Profile(fName, lName, dob),
                 initialDeposit);
