@@ -255,7 +255,7 @@ public class TransactionManagerController {
 
     /**
      * Handles "Update Balances" button interaction to apply the monthly
-     * interests and fees and display the updates balances
+     * interests and fees and display the updated balances
      * @param event as ActionEvent
      */
     @FXML
