@@ -19,7 +19,7 @@ public class TransactionManagerController {
     private DatePicker dob, dobDW;
     @FXML
     private RadioButton checking, collegeChecking, savings, moneyMarket,
-            checkingDW, collegeCheckingDW, savingsDW, moneyMarketDW;
+            checkingDW, collegeCheckingDW, savingsDW, moneyMarketDW, loyal;
     @FXML
     private Button open, close, withdraw, deposit, loadAccounts;
     @FXML
@@ -27,7 +27,7 @@ public class TransactionManagerController {
     @FXML
     private ToggleGroup campus;
     @FXML
-    private VBox campusGroupContainer;
+    private VBox campusGroupContainer, loyalContainer;
     @FXML
     private TextArea openCloseOutput, depositWithdrawOutput, databaseOutput;
     String[] fields = new String[FIELDS_FOR_OPEN_CLOSE];
@@ -262,6 +262,9 @@ public class TransactionManagerController {
     private void openSavings(String fName, String lName, Date dob, double initialDeposit) {
         Savings newSavings = new Savings(new Profile(fName, lName, dob),
                 initialDeposit);
+        if(loyal.isSelected()){
+            newSavings.isLoyal = true;
+        }
         openAccount(fName, lName, dob, newSavings, "S");
     }
     private void openMoneyMarket(String fName, String lName, Date dob, double initialDeposit) {
@@ -468,11 +471,22 @@ public class TransactionManagerController {
     }
 
     @FXML
-    protected void toggleCampus(){
+    protected void toggleLoyalCampus(){
         if(collegeChecking.isSelected()){
            campusGroupContainer.setDisable(false);
         }else {
             campusGroupContainer.setDisable(true);
+        }
+        if(savings.isSelected()){
+            loyalContainer.setDisable(false);
+        } else {
+            loyalContainer.setDisable(true);
+        }
+        if(moneyMarket.isSelected()){
+            loyal.setSelected(true);
+        }
+        else {
+            loyal.setSelected(false);
         }
     }
 
