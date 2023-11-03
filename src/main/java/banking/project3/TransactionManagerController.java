@@ -96,8 +96,8 @@ public class TransactionManagerController {
 
         switch (accountType) {
             case "S" -> {
-                // use LOYALTY_PART variable
-                openSavings(fName, lName, dob, initialDeposit);
+                String loyal = parts[LOYALTY_PART];
+                openSavingsLoaded(fName, lName, dob, initialDeposit, loyal);
             }
             case "CC" -> {
                 String campusCode = parts[CAMPUS_CODE_PART];
@@ -107,6 +107,14 @@ public class TransactionManagerController {
             case "MM" -> openMoneyMarket(fName, lName, dob, initialDeposit);
             default -> System.out.println("Unknown account type: " + accountType);
         }
+    }
+    public void openSavingsLoaded(String fName, String lName, Date dob, double initialDeposit, String loyalty){
+        Savings newSavings = new Savings(new Profile(fName, lName, dob),
+                initialDeposit);
+        if(loyalty.equals(LOYAL)){
+            newSavings.isLoyal = true;
+        }
+        openAccount(fName, lName, dob, newSavings, "S");
     }
 
     @FXML
