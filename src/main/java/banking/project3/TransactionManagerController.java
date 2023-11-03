@@ -11,6 +11,14 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Scanner;
 
+/**
+ * Controls JavaFX-related functions to manage transactions for RU Bank
+ * Contains separate functionality for opening, closing, depositing into,
+ * and withdrawing from, an account
+ * Contains further functionality for printing, printing with fees,
+ * updating balances, and loading accounts from a .txt file
+ * @author Nicholas Yim, Zain Zulfiqar
+ */
 
 public class TransactionManagerController {
     @FXML
@@ -56,6 +64,9 @@ public class TransactionManagerController {
     private static final int DAY_PART = 1;
 
 
+    /**
+     * Loads accounts to account database from .txt file
+     */
     @FXML
     protected void loadAccountsFromFile() {
         FileChooser fileChooser = new FileChooser();
@@ -71,6 +82,10 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Processes .txt file from GUI using Scanner
+     * @param file as File
+     */
     private void processFile(File file) {
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
@@ -87,6 +102,10 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Creates corresponding accounts from lines within the .txt file
+     * @param parts as String[]
+     */
     private void createAccountFromParts(String[] parts) {
         String accountType = parts[ACCOUNT_TYPE_PART];
         String fName = parts[FNAME_PART];
@@ -109,7 +128,10 @@ public class TransactionManagerController {
         }
     }
 
-
+    /**
+     * Handles "Open Account" button interaction to open an account
+     * @param event as ActionEvent
+     */
     @FXML
     protected void handleOpen(ActionEvent event) {
         RadioButton selectedRadioButton = (RadioButton) accountTypeGroup.getSelectedToggle();
@@ -129,6 +151,10 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Handles "Close Account" button interaction to close an account
+     * @param event as ActionEvent
+     */
     @FXML
     protected void handleClose(ActionEvent event){
         RadioButton selectedRadioButton = (RadioButton) accountTypeGroup.getSelectedToggle();
@@ -148,6 +174,10 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Handles "Deposit" button interaction to deposit amount into an account
+     * @param event as ActionEvent
+     */
     @FXML
     protected void handleDeposit(ActionEvent event) {
         RadioButton selectedRadioButton = (RadioButton)accountTypeGroupDW.getSelectedToggle();
@@ -166,6 +196,11 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Handles "Withdraw" button interaction to withdraw an amount
+     * from an account
+     * @param event as ActionEvent
+     */
     @FXML
     protected void handleWithdraw(ActionEvent event) {
         RadioButton selectedRadioButton = (RadioButton)accountTypeGroupDW.getSelectedToggle();
@@ -183,6 +218,12 @@ public class TransactionManagerController {
             }
         }
     }
+
+    /**
+     * Handles "Print Accounts" button interaction to display accounts
+     * sorted by account type and profile
+     * @param event as ActionEvent
+     */
     @FXML
     protected void handlePrint(ActionEvent event){
         String textToDisplay = "";
@@ -195,6 +236,11 @@ public class TransactionManagerController {
         databaseOutput.setText(textToDisplay);
     }
 
+    /**
+     * Handles "Print With Fees" button interaction to display accounts
+     * sorted with fees included
+     * @param event as ActionEvent
+     */
     @FXML
     protected void handlePrintWithFees(ActionEvent event){
         String textToDisplay = "";
@@ -207,6 +253,11 @@ public class TransactionManagerController {
         databaseOutput.setText(textToDisplay);
     }
 
+    /**
+     * Handles "Update Balances" button interaction to apply the monthly
+     * interests and fees and display the updates balances
+     * @param event as ActionEvent
+     */
     @FXML
     protected void handleUpdateBalances(ActionEvent event){
         String textToDisplay = "";
@@ -219,11 +270,28 @@ public class TransactionManagerController {
         databaseOutput.setText(textToDisplay);
     }
 
+    /**
+     * Opens Checking account by calling general open account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param initialDeposit as double
+     */
     private void openChecking(String fName, String lName, Date dob, double initialDeposit) {
         Checking newChecking = new Checking(new Profile(fName, lName, dob),
                 initialDeposit);
         openAccount(fName, lName, dob, newChecking, "C");
     }
+
+    /**
+     * Opens College Checking account by calling general open account method
+     * Checks if there is missing data and if the campus code is valid
+     * Prints corresponding error message if any of the checks fail
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param initialDeposit as double
+     */
     private void openCollegeChecking(String fName, String lName, Date dob, double initialDeposit) {
         Campus campusEnum = null;
         try {
@@ -242,6 +310,15 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Altered openCollegeChecking method to handle specific case of opening
+     * from a College Checking account from a loaded .txt file
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param initialDeposit as double
+     * @param campusCode as String
+     */
     private void openCollegeCheckingLoaded(String fName, String lName, Date dob, double initialDeposit, String campusCode) {
         Campus campusEnum = null;
         try {
@@ -256,6 +333,34 @@ public class TransactionManagerController {
             alert.showAndWait();
         }
     }
+
+    /**
+     * Opens Savings account by calling general open account method
+     * Checks if there is missing data
+     * Prints error message if there is missing data
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param initialDeposit as double
+     */
+    private void openSavings(String fName, String lName, Date dob, double initialDeposit) {
+        Savings newSavings = new Savings(new Profile(fName, lName, dob),
+                initialDeposit);
+        if(loyal.isSelected()){
+            newSavings.isLoyal = true;
+        }
+        openAccount(fName, lName, dob, newSavings, "S");
+    }
+
+    /**
+     * Altered openSavings method to handle specific case of
+     * opening a Savings account from a loaded .txt file
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param initialDeposit as double
+     * @param loyalty as String
+     */
     public void openSavingsLoaded(String fName, String lName, Date dob, double initialDeposit, String loyalty){
         Savings newSavings = new Savings(new Profile(fName, lName, dob),
                 initialDeposit);
@@ -265,15 +370,15 @@ public class TransactionManagerController {
         openAccount(fName, lName, dob, newSavings, "S");
     }
 
-
-    private void openSavings(String fName, String lName, Date dob, double initialDeposit) {
-        Savings newSavings = new Savings(new Profile(fName, lName, dob),
-                initialDeposit);
-        if(loyal.isSelected()){
-            newSavings.isLoyal = true;
-        }
-        openAccount(fName, lName, dob, newSavings, "S");
-    }
+    /**
+     * Opens Money Market account by calling general open account method
+     * Checks if initial deposit it at least 2000
+     * Prints error message if initial deposit is less than 2000
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param initialDeposit as double
+     */
     private void openMoneyMarket(String fName, String lName, Date dob, double initialDeposit) {
         if (initialDeposit < MoneyMarket.MIN_BALANCE_FEE_WAIVED) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -287,6 +392,18 @@ public class TransactionManagerController {
         openAccount(fName, lName, dob, newMoneyMarket, "MM");
     }
 
+    /**
+     * General open account method to handle opening an account given
+     * identifying parameters
+     * Calls 'open' method and checks if account is already in the database
+     * Displays message indicating if account is opened or if it is already
+     * in the database
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param account as Account
+     * @param accountType as String
+     */
     @FXML
     private void openAccount(String fName, String lName, Date dob,
                              Account account, String accountType) {
@@ -300,30 +417,66 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Closes Checking account by calling general close account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     */
     protected void closeChecking(String fName, String lName, Date dob){
         Profile profileToClose = new Profile(fName, lName, dob);
         Checking accountToClose = new Checking(profileToClose, ZERO_QUANTITY);
         closeAccount(fName, lName, dob, accountToClose, "C");
     }
 
+    /**
+     * Closes College Checking account by calling general close account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     */
     protected void closeCollegeChecking(String fName, String lName, Date dob){
         Profile profileToClose = new Profile(fName, lName, dob);
         CollegeChecking accountToClose = new CollegeChecking(profileToClose, ZERO_QUANTITY, null);
         closeAccount(fName, lName, dob, accountToClose, "CC");
     }
 
+    /**
+     * Closes Savings account by calling general close account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     */
     protected void closeSavings(String fName, String lName, Date dob){
         Profile profileToClose = new Profile(fName, lName, dob);
         Savings accountToClose = new Savings(profileToClose, ZERO_QUANTITY);
         closeAccount(fName, lName, dob, accountToClose, "S");
     }
 
+    /**
+     * Closes Money Market account by calling general close account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     */
     protected void closeMoneyMarket(String fName, String lName, Date dob){
         Profile profileToClose = new Profile(fName, lName, dob);
         MoneyMarket accountToClose = new MoneyMarket(profileToClose, ZERO_QUANTITY, true);
         closeAccount(fName, lName, dob, accountToClose, "MM");
     }
 
+    /**
+     * General close account method to handle closing an account given
+     * identifying parameters
+     * Calls 'close' method and checks if account is in database
+     * Prints message indicating if account has been closed or if is
+     * not in the database
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param account as Account
+     * @param accountType as String
+     */
     private void closeAccount(String fName, String lName, Date dob,
                               Account account, String accountType) {
         if (accountDatabase.close(account)) {
@@ -335,26 +488,74 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Deposits value into Checking account by calling general deposit
+     * account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param deposit as double
+     */
     private void depositChecking(String fName, String lName, Date dob, double deposit) {
         Profile profileToDeposit = new Profile(fName, lName, dob);
         Checking accountToDeposit = new Checking(profileToDeposit, deposit);
         depositAccount(fName, lName, dob, accountToDeposit, "C");
     }
+
+    /**
+     * Deposits value into College Checking account by calling general
+     * deposit account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param deposit as double
+     */
     private void depositCollegeChecking(String fName, String lName, Date dob, double deposit) {
         Profile profileToDeposit = new Profile(fName, lName, dob);
         CollegeChecking accountToDeposit = new CollegeChecking(profileToDeposit, deposit, null);
         depositAccount(fName, lName, dob , accountToDeposit,"CC");
     }
+
+    /**
+     * Deposits value into Savings account by calling general deposit
+     * account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param deposit as double
+     */
     private void depositSavings(String fName, String lName, Date dob, double deposit) {
         Profile profileToDeposit = new Profile(fName, lName, dob);
         Savings accountToDeposit = new Savings(profileToDeposit, deposit);
         depositAccount(fName, lName, dob, accountToDeposit, "S");
     }
+
+    /**
+     * Deposits value into Money Market account by calling general deposit
+     * account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param deposit as double
+     */
     private void depositMoneyMarket(String fName, String lName, Date dob, double deposit) {
         Profile profileToDeposit = new Profile(fName, lName, dob);
         MoneyMarket accountToDeposit = new MoneyMarket(profileToDeposit, deposit, true);
         depositAccount(fName, lName, dob, accountToDeposit, "MM");
     }
+
+    /**
+     * General deposit account to handle depositing value into an account
+     * given identifying parameters
+     * Checks if account is in account database and calls 'deposit' method
+     * Displays message indicating if deposit is successful or if the account
+     * is not in the database
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param account as Account
+     * @param accountType as String
+     */
     private void depositAccount(String fName, String lName, Date dob, Account
             account, String accountType) {
         if(accountDatabase.containsForTransactions(account)) {
@@ -369,27 +570,77 @@ public class TransactionManagerController {
 
     }
 
+    /**
+     * Withdraws value from Checking account by calling general withdraw
+     * account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param withdraw as double
+     */
     private void withdrawChecking(String fName, String lName, Date dob, double withdraw) {
         Profile profileToWithdraw = new Profile(fName, lName, dob);
         Checking accountToWithdraw = new Checking(profileToWithdraw, withdraw);
         withdrawAccount(fName, lName, dob, accountToWithdraw, withdraw, "C");
     }
+
+    /**
+     * Withdraws value from College Checking account by calling general
+     * withdraw account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param withdraw as double
+     */
     private void withdrawCollegeChecking(String fName, String lName, Date dob, double withdraw) {
         Profile profileToWithdraw = new Profile(fName, lName, dob);
         CollegeChecking accountToWithdraw = new CollegeChecking(profileToWithdraw, withdraw, null);
         withdrawAccount(fName, lName, dob, accountToWithdraw, withdraw, "CC");
     }
+
+    /**
+     * Withdraws value from Savings account by calling general withdraw
+     * account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param withdraw as double
+     */
     private void withdrawSavings(String fName, String lName, Date dob, double withdraw) {
         Profile profileToWithdraw = new Profile(fName, lName, dob);
         Savings accountToWithdraw = new Savings(profileToWithdraw, withdraw);
         withdrawAccount(fName, lName, dob, accountToWithdraw, withdraw, "S");
     }
+
+    /**
+     * Withdraws value from Money Market account by calling general withdraw
+     * account method
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param withdraw as double
+     */
     private void withdrawMoneyMarket(String fName, String lName, Date dob, double withdraw) {
         Profile profileToWithdraw = new Profile(fName, lName, dob);
         MoneyMarket accountToWithdraw = new MoneyMarket(profileToWithdraw, withdraw, true);
         withdrawAccount(fName, lName, dob, accountToWithdraw, withdraw, "MM");
     }
 
+    /**
+     * General withdraw account method to handle withdrawing value from an
+     * account given identifying parameters
+     * Calls 'withdraw' method and performs two checks (insufficient fund
+     * and not in database) then performs the withdrawal action if account and
+     * withdraw value are valid
+     * Displays message indicating a specific error or indicating if withdrawal
+     * is successful
+     * @param fName as String
+     * @param lName as String
+     * @param dob as Date
+     * @param account as Account
+     * @param withdraw as double
+     * @param accountType as String
+     */
     private void withdrawAccount(String fName, String lName, Date dob,
                                  Account account, double withdraw, String accountType) {
         if (!accountDatabase.withdraw(account)) {
@@ -408,6 +659,12 @@ public class TransactionManagerController {
                 + accountType + ") Withdraw - balance updated.");
     }
 
+    /**
+     * Shows error alert window with specified title and header
+     * @param title as String
+     * @param header as String
+     * @return false
+     */
     private boolean showAlert(String title, String header) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -416,27 +673,55 @@ public class TransactionManagerController {
         return false;
     }
 
+    /**
+     * Checks validity of specific text field entry
+     * @param textField as TextField
+     * @return true if textField is null or empty, false otherwise
+     */
     private boolean checkTextField(TextField textField) {
         return textField == null || textField.getText().isEmpty();
     }
 
+    /**
+     * Checks validity of DatePicker field entry
+     * @param datePicker as DatePicker
+     * @return true if datePicker is null or its value is null, false otherwise
+     */
     private boolean checkDateField(DatePicker datePicker) {
         return datePicker == null || datePicker.getValue() == null;
     }
 
-    private void populateFields(TextField fNameField, TextField lNameField, TextField depositField, DatePicker dobPicker) {
+    /**
+     * Populates fields using the text inputs and date picker value
+     * Fields: first name, last name, deposit, date
+     * @param fNameField as TextField
+     * @param lNameField as lNameField
+     * @param depositField as depositField
+     * @param dobPicker as DatePicker
+     */
+    private void populateFields(TextField fNameField, TextField lNameField,
+                                TextField depositField, DatePicker dobPicker) {
         fields[FNAME_INPUT] = fNameField.getText();
         fields[LNAME_INPUT] = lNameField.getText();
         fields[DEPOSIT_INPUT] = depositField.getText();
         initialDeposit = Double.parseDouble(fields[DEPOSIT_INPUT]);
         amount = initialDeposit;
         accountDob = new Date(dobPicker.getValue().getYear(),
-                dobPicker.getValue().getMonthValue(), dobPicker.getValue().getDayOfMonth());
+                dobPicker.getValue().getMonthValue(),
+                dobPicker.getValue().getDayOfMonth());
     }
 
+    /**
+     * Checks validity of corresponding fields for opening an account by
+     * calling specific check and populate methods
+     * Displays error alert indicating a specific error or no alert if
+     * checks pass
+     * @return false if error alert is shown, true otherwise
+     */
     @FXML
     protected boolean checkFieldsOpen(){
-        if (checkTextField(firstName) || checkTextField(lastName) || checkTextField(openDeposit) || checkDateField(dob)) {
+        if (checkTextField(firstName) || checkTextField(lastName) ||
+                checkTextField(openDeposit) || checkDateField(dob)) {
             return showAlert("Missing Data", "Please fill all values.");
         }
         try {
@@ -449,9 +734,17 @@ public class TransactionManagerController {
         return true;
     }
 
+    /**
+     * Checks validity of corresponding fields for closing an account by
+     * calling specific check and populate methods
+     * Displays error alert indicating a specific error or no alert if
+     * checks pass
+     * @return false if error alert is shown, true otherwise
+     */
     @FXML
     protected boolean checkFieldsClose(){
-        if (checkTextField(firstName) || checkTextField(lastName) || checkDateField(dob)) {
+        if (checkTextField(firstName) ||
+                checkTextField(lastName) || checkDateField(dob)) {
             return showAlert("Missing Data", "Please fill all values.");
         }
         try {
@@ -462,9 +755,17 @@ public class TransactionManagerController {
         return true;
     }
 
+    /**
+     * Checks validity of corresponding fields for depositing into or
+     * withdrawing from an account by calling specific check and populate methods
+     * Displays error alert indicating a specific error or no alert if
+     * checks pass
+     * @return false if error alert is shown, true otherwise
+     */
     @FXML
     protected boolean checkFieldsDepositWithdraw(){
-        if (checkTextField(firstNameDW) || checkTextField(lastNameDW) || checkTextField(depositOrWithdraw) || checkDateField(dobDW)) {
+        if (checkTextField(firstNameDW) || checkTextField(lastNameDW) ||
+                checkTextField(depositOrWithdraw) || checkDateField(dobDW)) {
             return showAlert("Missing Data", "Please fill all values.");
         }
         try {
@@ -477,6 +778,13 @@ public class TransactionManagerController {
         return true;
     }
 
+    /**
+     * Toggles Loyal and Campus container availabilities under specified conditions
+     * Enables Campus container when College Checking is selected, and disables otherwise
+     * Enables Loyal container when Savings is selected, and disables otherwise
+     * Selects Loyal status when Money Market is selected, and disables otherwise, since
+     * Money Market is loyal by default
+     */
     @FXML
     protected void toggleLoyalCampus(){
         if(collegeChecking.isSelected()){
@@ -497,6 +805,10 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Checks is initial deposit is valid
+     * @return false if initial deposit is less than or equal to 0, true otherwise
+     */
     private boolean isValidInitialDeposit(){
         if (initialDeposit <= ZERO_QUANTITY) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -508,17 +820,25 @@ public class TransactionManagerController {
         return true;
     }
 
+    /**
+     * Checks if withdraw amount is valid
+     * @return false if withdraw amount is less than or equal to 0, true otherwise
+     */
     private boolean isValidWithdraw() {
         if (amount <= ZERO_QUANTITY) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid Amount");
-            alert.setHeaderText("Withdrawal - amount cannot be 0 or negative.");
+            alert.setHeaderText("Withdraw - amount cannot be 0 or negative.");
             alert.showAndWait();
             return false;
         }
         return true;
     }
 
+    /**
+     * Checks is deposit amount is valid
+     * @return if deposit amount is less than or equal to 0, true otherwise
+     */
     private boolean isValidDeposit() {
         if (amount <= ZERO_QUANTITY) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -530,6 +850,15 @@ public class TransactionManagerController {
         return true;
     }
 
+    /**
+     * Checks if user has valid date of birth (age) to open an account
+     * User must be at least 16 years old to open any account and must be
+     * under 24 years old to open a College Checking account
+     * Prints error message if date of birth is invalid
+     * @param date as Date
+     * @param accountType as String
+     * @return true if valid DOB, false if invalid DOB
+     */
     private boolean ageCheck(Date date, String accountType){
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
@@ -557,6 +886,12 @@ public class TransactionManagerController {
         return true;
     }
 
+    /**
+     * Calculates age of user using Calendar class
+     * @param currentDate as Date
+     * @param ageDate as Date
+     * @return age as int
+     */
     private int calculateAge(Date currentDate, Date ageDate) {
         int age = currentDate.getYear() - ageDate.getYear();
 
@@ -567,6 +902,12 @@ public class TransactionManagerController {
         }
         return age;
     }
+
+    /**
+     * Converts the string form of the campus into the int form of the campus code
+     * @param campusString as String
+     * @return corresponding campus code as int
+     */
     private String convertToCode(String campusString) {
         switch (campusString) {
             case "New Brunswick" -> {
@@ -584,6 +925,11 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Parses date string from command line and converts to Date object
+     * @param dateString date of event as String
+     * @return created date as Date object
+     */
     private Date parseDate(String dateString) {
         String[] dateComponents = dateString.split("/");
         if (dateComponents.length == DATE_COMPONENTS_LENGTH) {
