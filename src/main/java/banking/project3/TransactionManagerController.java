@@ -9,6 +9,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -159,10 +160,10 @@ public class TransactionManagerController {
     protected void handleClose(ActionEvent event){
         RadioButton selectedRadioButton = (RadioButton) accountTypeGroup.getSelectedToggle();
         String accountType = selectedRadioButton.getText();
-        if(checkFieldsClose() && isValidInitialDeposit() &&
+        if(checkFieldsClose() &&
                 ageCheck(accountDob, accountType)){
             switch (accountType) {
-                case "College" -> closeChecking(fields[FNAME_INPUT],
+                case "Checking" -> closeChecking(fields[FNAME_INPUT],
                         fields[LNAME_INPUT], accountDob);
                 case "College Checking" -> closeCollegeChecking(fields[FNAME_INPUT],
                         fields[LNAME_INPUT], accountDob);
@@ -707,7 +708,9 @@ public class TransactionManagerController {
         fields[FNAME_INPUT] = fNameField.getText();
         fields[LNAME_INPUT] = lNameField.getText();
         fields[DEPOSIT_INPUT] = depositField.getText();
-        initialDeposit = Double.parseDouble(fields[DEPOSIT_INPUT]);
+        if(!(fields[DEPOSIT_INPUT].isEmpty())) {
+            initialDeposit = Double.parseDouble(fields[DEPOSIT_INPUT]);
+        }
         amount = initialDeposit;
         accountDob = new Date(dobPicker.getValue().getYear(),
                 dobPicker.getValue().getMonthValue(),
