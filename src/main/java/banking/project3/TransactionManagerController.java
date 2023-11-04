@@ -301,6 +301,9 @@ public class TransactionManagerController {
             campusEnum = Campus.fromCode(campusCode);
             CollegeChecking newCollegeChecking = new CollegeChecking(new
                     Profile(fName, lName, dob), initialDeposit, campusEnum);
+            if(!ageCheck(dob,"CC")){
+                return;
+            }
             openAccount(fName, lName, dob, newCollegeChecking, "CC");
         } catch (NullPointerException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
