@@ -728,12 +728,12 @@ public class TransactionManagerController {
     protected boolean checkFieldsOpen(){
         if (checkTextField(firstName) || checkTextField(lastName) ||
                 checkTextField(openDeposit) || checkDateField(dob)) {
-            return showAlert("Missing Data", "Please fill all values.");
+            return showAlert("Missing Data", "Missing data for opening an account.");
         }
         try {
             populateFields(firstName, lastName, openDeposit, dob);
         } catch(NullPointerException e) {
-            return showAlert("Missing Data", "Please fill all values.");
+            return showAlert("Missing Data", "Missing data for opening an account.");
         } catch (NumberFormatException e) {
             return showAlert("Invalid Amount", "Not a valid amount.");
         }
@@ -751,12 +751,12 @@ public class TransactionManagerController {
     protected boolean checkFieldsClose(){
         if (checkTextField(firstName) ||
                 checkTextField(lastName) || checkDateField(dob)) {
-            return showAlert("Missing Data", "Please fill all values.");
+            return showAlert("Missing Data", "Missing data for closing an account.");
         }
         try {
             populateFields(firstName, lastName, openDeposit, dob);
         } catch(NullPointerException e) {
-            return showAlert("Missing Data", "Please fill all values.");
+            return showAlert("Missing Data", "Missing data for closing an account.");
         }
         return true;
     }
