@@ -9,7 +9,6 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -427,7 +426,7 @@ public class TransactionManagerController {
      * @param lName as String
      * @param dob as Date
      */
-    protected void closeChecking(String fName, String lName, Date dob){
+    private void closeChecking(String fName, String lName, Date dob){
         Profile profileToClose = new Profile(fName, lName, dob);
         Checking accountToClose = new Checking(profileToClose, ZERO_QUANTITY);
         closeAccount(fName, lName, dob, accountToClose, "C");
@@ -439,7 +438,7 @@ public class TransactionManagerController {
      * @param lName as String
      * @param dob as Date
      */
-    protected void closeCollegeChecking(String fName, String lName, Date dob){
+    private void closeCollegeChecking(String fName, String lName, Date dob){
         Profile profileToClose = new Profile(fName, lName, dob);
         CollegeChecking accountToClose = new CollegeChecking(profileToClose, ZERO_QUANTITY, null);
         closeAccount(fName, lName, dob, accountToClose, "CC");
@@ -451,7 +450,7 @@ public class TransactionManagerController {
      * @param lName as String
      * @param dob as Date
      */
-    protected void closeSavings(String fName, String lName, Date dob){
+    private void closeSavings(String fName, String lName, Date dob){
         Profile profileToClose = new Profile(fName, lName, dob);
         Savings accountToClose = new Savings(profileToClose, ZERO_QUANTITY);
         closeAccount(fName, lName, dob, accountToClose, "S");
@@ -463,7 +462,7 @@ public class TransactionManagerController {
      * @param lName as String
      * @param dob as Date
      */
-    protected void closeMoneyMarket(String fName, String lName, Date dob){
+    private void closeMoneyMarket(String fName, String lName, Date dob){
         Profile profileToClose = new Profile(fName, lName, dob);
         MoneyMarket accountToClose = new MoneyMarket(profileToClose, ZERO_QUANTITY, true);
         closeAccount(fName, lName, dob, accountToClose, "MM");
@@ -752,6 +751,9 @@ public class TransactionManagerController {
         if (checkTextField(firstName) ||
                 checkTextField(lastName) || checkDateField(dob)) {
             return showAlert("Missing Data", "Missing data for closing an account.");
+        }
+        if (!openDeposit.getText().isEmpty()) {
+            return showAlert("Invalid Field", "Initial Deposit field must be empty when closing an account.");
         }
         try {
             populateFields(firstName, lastName, openDeposit, dob);
