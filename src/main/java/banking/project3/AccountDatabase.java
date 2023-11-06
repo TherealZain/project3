@@ -217,20 +217,10 @@ public class AccountDatabase {
     }
 
     /**
-     * Prints the sorted list of accounts.
-     */
-    public void printSorted(){
-        selectionSortAccountType();
-        for (int i = 0; i < numAcct; i++) {
-
-        }
-    }
-
-    /**
-     * Displays the list of accounts
+     * Prints/displays the list of accounts
      * @return text of accounts as String
      */
-    public String accountDatabaseToString(){
+    public String printSorted(){
         selectionSortAccountType();
         String text = "";
         for (int i = 0; i < numAcct; i++) {
@@ -240,10 +230,10 @@ public class AccountDatabase {
     }
 
     /**
-     * Displays the list of accounts along with their fees/interests
+     * Prints/displays the list of accounts along with their fees/interests
      * @return text of accounts as String
      */
-    public String accountDatabaseFeesToString(){
+    public String printFeesAndInterests(){
         selectionSortAccountType();
         String text = "";
         for(int i = 0; i< numAcct; i++){
@@ -253,11 +243,11 @@ public class AccountDatabase {
     }
 
     /**
-     * Applies the monthly interest and fees to the accounts and displays
+     * Applies the monthly interest and fees to the accounts and prints/displays
      * the updated balances
      * @return text of accounts as String
      */
-    public String accountDatabaseUBToString(){
+    public String printUpdatedBalances(){
         selectionSortAccountType();
         String text = "";
         selectionSortAccountType();
@@ -275,40 +265,10 @@ public class AccountDatabase {
     }
 
     /**
-     * Prints the list of accounts along with their fees.
-     */
-    public void printFeesAndInterests(){ //calculate interests/fees
-        selectionSortAccountType();
-        for(int i = 0; i< numAcct; i++){
-        }
-    }
-
-    /**
-     * Applies the monthly interest and fees to the accounts and prints the updated balances.
-     */
-    public void printUpdatedBalances(){ //apply the interests/fees
-        selectionSortAccountType();
-        for(int i = 0; i < numAcct; i++){
-            accounts[i].balance += accounts[i].monthlyInterest();
-            accounts[i].balance -= accounts[i].monthlyFee();
-            if(accounts[i] instanceof MoneyMarket){
-                MoneyMarket mmAccount = (MoneyMarket) accounts[i];
-                    mmAccount.setWithdrawal(RESET_WITHDRAWAL);
-                    accounts[i] = mmAccount;
-            }
-        }
-    }
-
-    /**
      * Checks if the accounts array is empty.
      * @return true if empty, false otherwise.
      */
     public boolean isEmpty(){
         return numAcct == 0;
-    }
-
-
-    public int getNumAcct() {
-        return numAcct;
     }
 }

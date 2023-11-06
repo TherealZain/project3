@@ -235,7 +235,7 @@ public class TransactionManagerController {
         String textToDisplay = "";
         if (!(accountDatabase.isEmpty())) {
             textToDisplay += "*Accounts sorted by account type and profile.\n";
-            textToDisplay += accountDatabase.accountDatabaseToString();
+            textToDisplay += accountDatabase.printSorted();
             textToDisplay += ("*end of list.\n");
         } else textToDisplay += "Account Database is empty!";
 
@@ -252,7 +252,7 @@ public class TransactionManagerController {
         String textToDisplay = "";
         if (!(accountDatabase.isEmpty())) {
             textToDisplay += "*Accounts sorted by account type and profile.\n";
-            textToDisplay += accountDatabase.accountDatabaseFeesToString();
+            textToDisplay += accountDatabase.printFeesAndInterests();
             textToDisplay += ("*end of list.\n");
         } else textToDisplay += "Account Database is empty!";
 
@@ -269,7 +269,7 @@ public class TransactionManagerController {
         String textToDisplay = "";
         if (!(accountDatabase.isEmpty())) {
             textToDisplay += "*Accounts sorted by account type and profile.\n";
-            textToDisplay += accountDatabase.accountDatabaseUBToString();
+            textToDisplay += accountDatabase.printUpdatedBalances();
             textToDisplay += ("*end of list.\n");
         } else textToDisplay += "Account Database is empty!";
 
