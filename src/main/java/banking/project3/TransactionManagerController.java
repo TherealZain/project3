@@ -75,7 +75,8 @@ public class TransactionManagerController {
                 new FileChooser.ExtensionFilter("Text Files", "*.txt"),
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
-        File selectedFile = fileChooser.showOpenDialog(loadAccounts.getScene().getWindow());
+        File selectedFile = fileChooser.showOpenDialog(
+                loadAccounts.getScene().getWindow());
 
         if (selectedFile != null) {
             processFile(selectedFile);
@@ -98,7 +99,8 @@ public class TransactionManagerController {
             }
             databaseOutput.setText("Accounts loaded successfully!");
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert("File Error", "Error while loading the accounts file: "
+                    + e.getMessage());
         }
     }
 
@@ -120,11 +122,13 @@ public class TransactionManagerController {
             }
             case "CC" -> {
                 String campusCode = parts[CAMPUS_CODE_PART];
-                openCollegeCheckingLoaded(fName, lName, dob, initialDeposit, campusCode);
+                openCollegeCheckingLoaded(fName, lName, dob,
+                        initialDeposit, campusCode);
             }
             case "C" -> openChecking(fName, lName, dob, initialDeposit);
             case "MM" -> openMoneyMarket(fName, lName, dob, initialDeposit);
-            default -> System.out.println("Unknown account type: " + accountType);
+            default -> System.out.println("Unknown account type: "
+                    + accountType);
         }
     }
 
@@ -134,19 +138,20 @@ public class TransactionManagerController {
      */
     @FXML
     protected void handleOpen(ActionEvent event) {
-        RadioButton selectedRadioButton = (RadioButton) accountTypeGroup.getSelectedToggle();
+        RadioButton selectedRadioButton = (RadioButton)
+                accountTypeGroup.getSelectedToggle();
         String accountType = selectedRadioButton.getText();
         if(checkFieldsOpen() && isValidInitialDeposit() &&
                 ageCheck(accountDob, accountType)){
             switch (accountType) {
-                case "Checking" -> openChecking(fields[FNAME_INPUT], fields[LNAME_INPUT],
-                        accountDob, initialDeposit);
-                case "College Checking" -> openCollegeChecking(fields[FNAME_INPUT], fields[LNAME_INPUT],
-                        accountDob, initialDeposit);
-                case "Savings" -> openSavings(fields[FNAME_INPUT], fields[LNAME_INPUT], accountDob,
-                        initialDeposit);
-                case "Money Market" -> openMoneyMarket(fields[FNAME_INPUT], fields[LNAME_INPUT],
-                         accountDob, initialDeposit);
+                case "Checking" -> openChecking(fields[FNAME_INPUT],
+                        fields[LNAME_INPUT], accountDob, initialDeposit);
+                case "College Checking" -> openCollegeChecking(fields[FNAME_INPUT],
+                        fields[LNAME_INPUT], accountDob, initialDeposit);
+                case "Savings" -> openSavings(fields[FNAME_INPUT],
+                        fields[LNAME_INPUT], accountDob, initialDeposit);
+                case "Money Market" -> openMoneyMarket(fields[FNAME_INPUT],
+                        fields[LNAME_INPUT], accountDob, initialDeposit);
             }
         }
     }
@@ -157,7 +162,8 @@ public class TransactionManagerController {
      */
     @FXML
     protected void handleClose(ActionEvent event){
-        RadioButton selectedRadioButton = (RadioButton) accountTypeGroup.getSelectedToggle();
+        RadioButton selectedRadioButton = (RadioButton)
+                accountTypeGroup.getSelectedToggle();
         String accountType = selectedRadioButton.getText();
         if(checkFieldsClose() &&
                 ageCheck(accountDob, accountType)){
@@ -180,7 +186,8 @@ public class TransactionManagerController {
      */
     @FXML
     protected void handleDeposit(ActionEvent event) {
-        RadioButton selectedRadioButton = (RadioButton)accountTypeGroupDW.getSelectedToggle();
+        RadioButton selectedRadioButton =
+                (RadioButton)accountTypeGroupDW.getSelectedToggle();
         String accountType = selectedRadioButton.getText();
         if (checkFieldsDepositWithdraw() && isValidDeposit()) {
             switch (accountType) {
@@ -203,7 +210,8 @@ public class TransactionManagerController {
      */
     @FXML
     protected void handleWithdraw(ActionEvent event) {
-        RadioButton selectedRadioButton = (RadioButton)accountTypeGroupDW.getSelectedToggle();
+        RadioButton selectedRadioButton =
+                (RadioButton)accountTypeGroupDW.getSelectedToggle();
         String accountType = selectedRadioButton.getText();
         if (checkFieldsDepositWithdraw() && isValidWithdraw()) {
             switch (accountType) {
@@ -277,7 +285,8 @@ public class TransactionManagerController {
      * @param dob as Date
      * @param initialDeposit as double
      */
-    private void openChecking(String fName, String lName, Date dob, double initialDeposit) {
+    private void openChecking(String fName, String lName, Date dob,
+                              double initialDeposit) {
         Checking newChecking = new Checking(new Profile(fName, lName, dob),
                 initialDeposit);
         openAccount(fName, lName, dob, newChecking, "C");
@@ -292,7 +301,8 @@ public class TransactionManagerController {
      * @param dob as Date
      * @param initialDeposit as double
      */
-    private void openCollegeChecking(String fName, String lName, Date dob, double initialDeposit) {
+    private void openCollegeChecking(String fName, String lName, Date dob,
+                                     double initialDeposit) {
         Campus campusEnum = null;
         try {
             RadioButton selectedCampus = (RadioButton) campus.getSelectedToggle();
@@ -322,7 +332,9 @@ public class TransactionManagerController {
      * @param initialDeposit as double
      * @param campusCode as String
      */
-    private void openCollegeCheckingLoaded(String fName, String lName, Date dob, double initialDeposit, String campusCode) {
+    private void openCollegeCheckingLoaded(String fName, String lName,
+                                           Date dob, double initialDeposit,
+                                           String campusCode) {
         Campus campusEnum = null;
         try {
             campusEnum = Campus.fromCode(campusCode);
@@ -346,7 +358,8 @@ public class TransactionManagerController {
      * @param dob as Date
      * @param initialDeposit as double
      */
-    private void openSavings(String fName, String lName, Date dob, double initialDeposit) {
+    private void openSavings(String fName, String lName, Date dob,
+                             double initialDeposit) {
         Savings newSavings = new Savings(new Profile(fName, lName, dob),
                 initialDeposit);
         if(loyal.isSelected()){
@@ -364,7 +377,8 @@ public class TransactionManagerController {
      * @param initialDeposit as double
      * @param loyalty as String
      */
-    public void openSavingsLoaded(String fName, String lName, Date dob, double initialDeposit, String loyalty){
+    public void openSavingsLoaded(String fName, String lName, Date dob,
+                                  double initialDeposit, String loyalty){
         Savings newSavings = new Savings(new Profile(fName, lName, dob),
                 initialDeposit);
         if(loyalty.equals(LOYAL)){
@@ -382,11 +396,13 @@ public class TransactionManagerController {
      * @param dob as Date
      * @param initialDeposit as double
      */
-    private void openMoneyMarket(String fName, String lName, Date dob, double initialDeposit) {
+    private void openMoneyMarket(String fName, String lName, Date dob,
+                                 double initialDeposit) {
         if (initialDeposit < MoneyMarket.MIN_BALANCE_FEE_WAIVED) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Please enter valid amount");
-            alert.setHeaderText("Minimum of $2000 to open a Money Market account.");
+            alert.setHeaderText("Minimum of $2000 to open a Money " +
+                    "Market account.");
             alert.showAndWait();
             return;
         }
@@ -648,18 +664,20 @@ public class TransactionManagerController {
                                  Account account, double withdraw, String accountType) {
         if (!accountDatabase.withdraw(account)) {
             if (withdraw > account.balance) {
-                depositWithdrawOutput.setText(fName + " " + lName + " " + dob.dateString()
-                        + "(" + accountType + ") " + "Withdraw - " +
-                        "insufficient fund.");
+                depositWithdrawOutput.setText(fName + " " + lName + " " +
+                        dob.dateString() + "(" + accountType + ") " +
+                        "Withdraw - insufficient fund.");
             }
             else {
-                depositWithdrawOutput.setText(fName + " " + lName + " " + dob.dateString()
-                        + "(" + accountType + ") is not in the database.");
+                depositWithdrawOutput.setText(fName + " " + lName +
+                        " " + dob.dateString() + "(" + accountType + ") " +
+                        "is not in the database.");
             }
             return;
         }
-        depositWithdrawOutput.setText(fName + " " + lName + " " + dob.dateString() + "("
-                + accountType + ") Withdraw - balance updated.");
+        depositWithdrawOutput.setText(fName + " " + lName + " " +
+                dob.dateString() + "(" + accountType + ") Withdraw " +
+                "- balance updated.");
     }
 
     /**
@@ -727,12 +745,14 @@ public class TransactionManagerController {
     protected boolean checkFieldsOpen(){
         if (checkTextField(firstName) || checkTextField(lastName) ||
                 checkTextField(openDeposit) || checkDateField(dob)) {
-            return showAlert("Missing Data", "Missing data for opening an account.");
+            return showAlert("Missing Data", "Missing data for opening " +
+                    "an account.");
         }
         try {
             populateFields(firstName, lastName, openDeposit, dob);
         } catch(NullPointerException e) {
-            return showAlert("Missing Data", "Missing data for opening an account.");
+            return showAlert("Missing Data", "Missing data for opening " +
+                    "an account.");
         } catch (NumberFormatException e) {
             return showAlert("Invalid Amount", "Not a valid amount.");
         }
@@ -750,15 +770,18 @@ public class TransactionManagerController {
     protected boolean checkFieldsClose(){
         if (checkTextField(firstName) ||
                 checkTextField(lastName) || checkDateField(dob)) {
-            return showAlert("Missing Data", "Missing data for closing an account.");
+            return showAlert("Missing Data", "Missing data for closing an " +
+                    "account.");
         }
         if (!openDeposit.getText().isEmpty()) {
-            return showAlert("Invalid Field", "Initial Deposit field must be empty when closing an account.");
+            return showAlert("Invalid Field", "Initial Deposit " +
+                    "field must be empty when closing an account.");
         }
         try {
             populateFields(firstName, lastName, openDeposit, dob);
         } catch(NullPointerException e) {
-            return showAlert("Missing Data", "Missing data for closing an account.");
+            return showAlert("Missing Data", "Missing data for closing an " +
+                    "account.");
         }
         return true;
     }
@@ -790,8 +813,8 @@ public class TransactionManagerController {
      * Toggles Loyal and Campus container availabilities under specified conditions
      * Enables Campus container when College Checking is selected, and disables otherwise
      * Enables Loyal container when Savings is selected, and disables otherwise
-     * Selects Loyal status when Money Market is selected, and disables otherwise, since
-     * Money Market is loyal by default
+     * Selects Loyal status when Money Market is selected, and disables
+     * otherwise, since Money Market is loyal by default
      */
     @FXML
     protected void toggleLoyalCampus(){
@@ -830,7 +853,8 @@ public class TransactionManagerController {
 
     /**
      * Checks if withdraw amount is valid
-     * @return false if withdraw amount is less than or equal to 0, true otherwise
+     * @return false if withdraw amount is less than or equal to 0,
+     * true otherwise
      */
     private boolean isValidWithdraw() {
         if (amount <= ZERO_QUANTITY) {
