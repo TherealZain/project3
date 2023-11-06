@@ -127,8 +127,6 @@ public class TransactionManagerController {
             }
             case "C" -> openChecking(fName, lName, dob, initialDeposit);
             case "MM" -> openMoneyMarket(fName, lName, dob, initialDeposit);
-            default -> System.out.println("Unknown account type: "
-                    + accountType);
         }
     }
 

@@ -222,7 +222,7 @@ public class AccountDatabase {
     public void printSorted(){
         selectionSortAccountType();
         for (int i = 0; i < numAcct; i++) {
-            System.out.println(accounts[i].toString());
+
         }
     }
 
@@ -280,7 +280,6 @@ public class AccountDatabase {
     public void printFeesAndInterests(){ //calculate interests/fees
         selectionSortAccountType();
         for(int i = 0; i< numAcct; i++){
-            System.out.println(accounts[i].stringWithFees());
         }
     }
 
@@ -297,7 +296,6 @@ public class AccountDatabase {
                     mmAccount.setWithdrawal(RESET_WITHDRAWAL);
                     accounts[i] = mmAccount;
             }
-            System.out.println(accounts[i].toString());
         }
     }
 
